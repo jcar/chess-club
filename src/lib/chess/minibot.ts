@@ -1,5 +1,5 @@
-// A tiny rule-based opponent for the Step 1 mini-games (Pawn Wars, rook vs.
-// pawns, …). No engine: it prefers promoting, then winning captures, then safe
+// A tiny rule-based opponent for the mini-games (Pawn Wars, rook vs. pawns,
+// a lone king defending against king and queen). No engine: it prefers promoting, then winning captures, then safe
 // pawn pushes, with some randomness. `sloppy` (0–1) is how often it just plays
 // any legal move, so a kindergartner can beat it.
 
@@ -37,6 +37,8 @@ export function botMove(fen: string, rng: () => number = Math.random, sloppy = 0
       const defended = attackedBy(after.fen(), m.to, g.turn());
       score -= defended ? VALUE[m.piece] * 3 : VALUE[m.piece] * 10;
     }
+    // A lone king runs for the middle, where it's hardest to checkmate.
+    if (m.piece === "k") score -= (Math.abs(3.5 - (m.to.charCodeAt(0) - 97)) + Math.abs(3.5 - (Number(m.to[1]) - 1))) * 0.8;
     if (m.piece === "p") score += (m.color === "w" ? Number(m.to[1]) : 9 - Number(m.to[1])) * 0.6;
     if (!best || score > best.score) best = { m, score };
   }
@@ -46,8 +48,13 @@ export function botMove(fen: string, rng: () => number = Math.random, sloppy = 0
 /** Result after a move, or null if the game goes on. */
 export function outcome(fenAfter: string, lastMove: Pick<Move, "piece" | "to" | "color">, game: MiniGame): Winner | null {
   const mover = lastMove.color === "w" ? "white" : "black";
-  if (lastRank(lastMove)) return mover;
   const g = load(fenAfter);
+  if (game.win === "mate") {
+    if (g.isCheckmate()) return mover;
+    if (g.isStalemate() || g.isInsufficientMaterial()) return "draw";
+    return null;
+  }
+  if (lastRank(lastMove)) return mover;
   const counts = { w: 0, b: 0 };
   for (const row of g.board()) for (const c of row) if (c) counts[c.color]++;
   if (game.win === "captureAll" || game.win === "promote") {

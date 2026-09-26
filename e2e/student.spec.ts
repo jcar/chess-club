@@ -70,3 +70,19 @@ test("mini-game: the bot answers a move", async ({ page }) => {
   await tapSquare(page, "e4");
   await expect(page.getByTestId("game-status")).toHaveText("Your move", { timeout: 3000 });
 });
+
+test("castling works with tap-to-move", async ({ page }) => {
+  await page.goto("./student/lesson/s4-castle/");
+  await page.getByTestId("start").click();
+  await tapSquare(page, "e1");
+  await tapSquare(page, "g1");
+  await expect(page.getByTestId("feedback-right")).toBeVisible();
+});
+
+test("en passant works with tap-to-move", async ({ page }) => {
+  await page.goto("./student/lesson/s4-en-passant/");
+  await page.getByTestId("start").click();
+  await tapSquare(page, "e5");
+  await tapSquare(page, "d6");
+  await expect(page.getByTestId("feedback-right")).toBeVisible();
+});

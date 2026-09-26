@@ -104,8 +104,11 @@ export interface Activity {
 }
 
 export interface MiniGame {
-  /** First side to promote a pawn wins; or capture all enemy pieces wins. */
-  win: "promote" | "captureAll";
+  /**
+   * promote: first pawn to the far side wins. captureAll: take every enemy
+   * piece. mate: a real ending (e.g. king and queen vs. king), where stalemate is a draw.
+   */
+  win: "promote" | "captureAll" | "mate";
   youPlay: "white" | "black";
 }
 

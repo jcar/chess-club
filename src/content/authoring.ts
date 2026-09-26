@@ -10,9 +10,10 @@ export type Placement = Partial<Record<PieceLetter, Square | Square[]>>;
 
 /**
  * FEN from a placement, e.g. board({ R: "d4", p: ["d7", "g4"] }).
- * Uppercase = White, lowercase = Black (FEN letters). No castling rights.
+ * Uppercase = White, lowercase = Black (FEN letters). Castling rights are
+ * off unless given, e.g. board({...}, "w", "KQ").
  */
-export function board(placement: Placement, turn: "w" | "b" = "w"): string {
+export function board(placement: Placement, turn: "w" | "b" = "w", castling = "-"): string {
   const grid: (string | null)[][] = Array.from({ length: 8 }, () => Array(8).fill(null));
   for (const [letter, where] of Object.entries(placement)) {
     for (const sq of Array.isArray(where) ? where : [where!]) {
@@ -35,7 +36,7 @@ export function board(placement: Placement, turn: "w" | "b" = "w"): string {
     }
     return s + (empty || "");
   });
-  return `${rows.join("/")} ${turn} - - 0 1`;
+  return `${rows.join("/")} ${turn} ${castling} - 0 1`;
 }
 
 export const START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";

@@ -23,8 +23,9 @@ export function isSandbox(fen: string): boolean {
 /** Force the side to move (sandbox exercises let one piece move repeatedly). */
 export function withTurn(fen: string, turn: "w" | "b"): string {
   const parts = fen.split(" ");
+  // An en-passant square only belongs to the side whose turn it already is.
+  if (parts[1] !== turn) parts[3] = "-";
   parts[1] = turn;
-  parts[3] = "-"; // an en-passant square is only valid for the other side
   return parts.join(" ");
 }
 

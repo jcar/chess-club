@@ -61,14 +61,17 @@ export function validateExercise(ex: Exercise, where: string): string[] {
       if (ex.goal === "escape" && !load(ex.fen).inCheck()) errs.push(`${at}: "escape" but the side to move isn't in check`);
       const legal = movesMeeting(ex.fen, "any");
       const meeting = movesMeeting(ex.fen, ex.goal);
+      // A promotion is four moves (=Q, =R, =B, =N); the app always promotes to a
+      // queen, so compare on from+to only.
+      const same = (a: string, b: string) => a.slice(0, 4) === b.slice(0, 4);
       for (const a of ex.answers) {
-        if (!legal.includes(a)) errs.push(`${at}: ${a} is not legal for ${turnOf(ex.fen) === "w" ? "White" : "Black"}`);
-        else if (!meeting.includes(a)) errs.push(`${at}: ${a} does not meet goal "${ex.goal}"`);
+        if (!legal.some((m) => same(m, a))) errs.push(`${at}: ${a} is not legal for ${turnOf(ex.fen) === "w" ? "White" : "Black"}`);
+        else if (!meeting.some((m) => same(m, a))) errs.push(`${at}: ${a} does not meet goal "${ex.goal}"`);
       }
       // The key must be complete, or a kid who finds another correct move gets
       // marked wrong (and so does the worksheet). Mate is never strict.
       if (ex.goal !== "any" && (!ex.strict || ex.goal === "mate")) {
-        const missing = meeting.filter((m) => !ex.answers.includes(m));
+        const missing = [...new Set(meeting.filter((m) => !ex.answers.some((a) => same(m, a))).map((m) => m.slice(0, 4)))];
         if (missing.length) errs.push(`${at}: answer key is missing ${ex.goal} move(s) ${missing.join(", ")}`);
       }
       break;
