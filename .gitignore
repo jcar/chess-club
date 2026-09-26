@@ -1,0 +1,18 @@
+node_modules/
+.next/
+out/
+.env
+.env.*
+!.env.example
+scripts/.cache/
+# Reference material (copyrighted books). The folder and its README are
+# tracked; nothing inside it ever is.
+references/*
+!references/README.md
+test-results/
+playwright-report/
+tsconfig.tsbuildinfo
+next-env.d.ts
+*.log
+.DS_Store
+.pages/
