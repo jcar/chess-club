@@ -36,7 +36,9 @@ design is in `~/.claude/plans/i-want-to-build-unified-newell.md`. Sibling projec
   session length), `share.ts` (roster-only link in the URL fragment).
 - `src/lib/passcode.ts`: `S<step>-L<lesson>-<checksum>` codes carry passes from
   an anonymous iPad (or paper) to the teacher's roster.
-- `src/lib/chess/minibot.ts`: rule-based pawn-side bot for the Step 1 mini-games.
+- `src/lib/chess/minibot.ts`: rule-based bot for the mini-games (pawn races, piece
+  vs. pawns, and a lone king that runs for the centre in the Step 4–5 mating games).
+  `outcome()` handles promote / captureAll / mate (stalemate = draw).
 
 ## Static hosting rules (GitHub Pages; hard requirement)
 

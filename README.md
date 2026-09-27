@@ -26,7 +26,7 @@ device, and it works offline after the first visit.
 | 2 | Capture & Count | ✅ 4 lessons |
 | 3 | Check & Checkmate | ✅ 3 lessons |
 | 4 | Special Rules & Draws | ✅ 4 lessons |
-| 5 | Finish the Game | planned |
+| 5 | Finish the Game | ✅ 3 lessons |
 | 6 | Tactics I + CCA | planned |
 | 7 | Starting Well | planned |
 | 8 | Club Player | planned |

@@ -25,6 +25,7 @@ export function MiniGameScreen({ activity, young, readAloud, onExit }: Props) {
   const [last, setLast] = useState<{ from: Square; to: Square } | undefined>();
   const [winner, setWinner] = useState<Winner | null>(null);
   const [thinking, setThinking] = useState(false);
+  const [moves, setMoves] = useState(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const announce = useCallback(
@@ -51,6 +52,7 @@ export function MiniGameScreen({ activity, young, readAloud, onExit }: Props) {
     const after = g.fen();
     setFen(after);
     setLast({ from, to });
+    setMoves((n) => n + 1);
     const w = outcome(after, m, game);
     if (w) return announce(w);
     setThinking(true);
@@ -73,6 +75,7 @@ export function MiniGameScreen({ activity, young, readAloud, onExit }: Props) {
     setLast(undefined);
     setWinner(null);
     setThinking(false);
+    setMoves(0);
   };
 
   return (
@@ -85,6 +88,9 @@ export function MiniGameScreen({ activity, young, readAloud, onExit }: Props) {
       <Board fen={fen} orientation={game.youPlay} size="lg" getMoves={getMoves} onMove={onMove} lastMove={last} />
       <p className="min-h-10 font-display text-2xl font-semibold" aria-live="polite" data-testid="game-status">
         {winner ? (winner === "draw" ? "Draw! 🤝" : winner === game.youPlay ? "You win! 🎉" : "Computer wins. Try again!") : thinking ? "Thinking…" : "Your move"}
+      </p>
+      <p className="-mt-3 text-lg text-ink-soft" data-testid="game-moves">
+        Your moves: <b>{moves}</b>
       </p>
       <div className="flex gap-3">
         <BigButton tone="soft" onClick={reset}>
