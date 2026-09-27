@@ -37,7 +37,7 @@ export const step1: Lesson[] = [
       },
       {
         say: "Every square has a name: a letter for its column and a number for its row. This square is e4.",
-        do: "Grade 3 and up only. Skip this beat for K–2.",
+        do: "Skip this beat for kids who are still learning to read.",
         demo: { fen: EMPTY_FEN, highlight: ["e4"] },
       },
     ],

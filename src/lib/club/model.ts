@@ -10,6 +10,8 @@ export interface Kid {
   id: string;
   name: string;
   grade?: string; // "K", "1" … "12"
+  /** Easy-reading mode on the iPad (simpler words, read-aloud). Unset = guess from grade. */
+  earlyReader?: boolean;
   /** Kids who already play can start higher; earlier steps count as done. */
   placedAt?: number;
   archived?: boolean;

@@ -5,10 +5,11 @@ import { useState } from "react";
 import { STEPS, getLesson } from "@/content/curriculum";
 import { StepDot } from "@/components/ui/ui";
 import { settingsStore, useSettings } from "@/lib/settings";
-import { useClub, useMyProgress, useWho, whoStore } from "@/lib/club/store";
+import { clubStore, useClub, useMyProgress, useWho, whoStore } from "@/lib/club/store";
 import { currentStep, hasPassed } from "@/lib/club/model";
 import { passCodeFor } from "@/lib/passcode";
-import { isYoungGrade } from "@/lib/young";
+import { isEarlyReader } from "@/lib/young";
+import { updateKid } from "@/lib/club/model";
 
 export function StudentHome() {
   const club = useClub();
@@ -19,7 +20,7 @@ export function StudentHome() {
   const kid = kids.find((k) => k.id === who.kidId) ?? null;
   const [pickingName, setPickingName] = useState(false);
   const [openStep, setOpenStep] = useState<number | null>(null);
-  const young = kid ? isYoungGrade(kid.grade) ?? settings.young : settings.young;
+  const young = isEarlyReader(kid, settings.young);
 
   const passed = (lessonId: string, step: number) => (kid ? hasPassed(club, kid, lessonId, step) : Boolean(me.passed[lessonId]));
   const activeStep = openStep ?? (kid ? currentStep(club, kid) : 1);
@@ -99,8 +100,19 @@ export function StudentHome() {
 
       <section className="flex flex-wrap items-center gap-3 rounded-2xl bg-sunk p-4 text-lg">
         <label className="flex items-center gap-3">
-          <input type="checkbox" className="h-6 w-6 accent-[var(--primary)]" checked={young} onChange={(e) => settingsStore.update((s) => ({ ...s, young: e.target.checked }))} disabled={Boolean(kid && isYoungGrade(kid.grade) !== undefined)} />
-          Little kids mode (reads everything out loud)
+          <input
+            type="checkbox"
+            className="h-6 w-6 accent-[var(--primary)]"
+            checked={young}
+            onChange={(e) => {
+              const on = e.target.checked;
+              // Signed in: remember it for this kid. Otherwise: for this device.
+              if (kid) clubStore.update((c) => updateKid(c, kid.id, { earlyReader: on }));
+              else settingsStore.update((s) => ({ ...s, young: on }));
+            }}
+            data-testid="easy-reading"
+          />
+          Easy reading: simpler words, and everything is read out loud
         </label>
         {!kid && Object.keys(me.passed).length > 0 && <MyCodes passed={Object.keys(me.passed)} />}
       </section>

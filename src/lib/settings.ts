@@ -6,7 +6,7 @@
 import { createLocalStore, useLocalStore } from "./store";
 
 export interface Settings {
-  /** K–2 mode: kid wording, star marks, and read-aloud on by default. */
+  /** Easy-reading mode for this device: simpler wording, star marks, read-aloud. */
   young: boolean;
   readAloud: boolean;
   /** Teacher PIN that locks student mode to one lesson (stored only here). */

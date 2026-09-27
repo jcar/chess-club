@@ -70,7 +70,10 @@ design is in `~/.claude/plans/i-want-to-build-unified-newell.md`. Sibling projec
 - **Privacy:** kids are first names/nicknames, stored only in localStorage. No
   analytics, no external requests at runtime.
 - Never read localStorage during render: use `createLocalStore` + `useLocalStore`.
-- Kid-facing text: short, concrete; give K–2 wording in `Words.kid`. Big targets
+- Kid-facing text: short, concrete; give easy-reading wording in `Words.kid`.
+  Easy reading is about reading ability, not age or chess level (`lib/young.ts`,
+  per-kid `earlyReader`). Never label content or steps by grade: a new 6th grader
+  starts at Step 1. Big targets
   (≥60px) in student mode; tap-to-move first.
 - New content: run `npm run validate`; it will tell you about missing answers.
 

@@ -17,7 +17,7 @@ function fromB64Url(s: string): string {
 }
 
 export function rosterFragment(club: Club): string {
-  const kids = club.kids.filter((k) => !k.archived).map((k) => [k.id, k.name, k.grade ?? "", k.placedAt ?? 0]);
+  const kids = club.kids.filter((k) => !k.archived).map((k) => [k.id, k.name, k.grade ?? "", k.placedAt ?? 0, k.earlyReader === undefined ? -1 : Number(k.earlyReader)]);
   return "roster=" + toB64Url(JSON.stringify({ n: club.name, k: kids }));
 }
 
@@ -26,8 +26,8 @@ export function parseRosterFragment(hash: string): Club | null {
   const m = hash.replace(/^#/, "").match(/^roster=([A-Za-z0-9_-]+)$/);
   if (!m) return null;
   try {
-    const data = JSON.parse(fromB64Url(m[1])) as { n: string; k: [string, string, string, number][] };
-    const kids: Kid[] = data.k.map(([id, name, grade, placedAt]) => ({ id, name, grade: grade || undefined, placedAt: placedAt || undefined }));
+    const data = JSON.parse(fromB64Url(m[1])) as { n: string; k: [string, string, string, number, number?][] };
+    const kids: Kid[] = data.k.map(([id, name, grade, placedAt, er = -1]) => ({ id, name, grade: grade || undefined, placedAt: placedAt || undefined, earlyReader: er === -1 ? undefined : er === 1 }));
     return { ...EMPTY_CLUB, name: data.n, kids, ladder: kids.map((k) => k.id) };
   } catch {
     return null;

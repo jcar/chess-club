@@ -10,7 +10,7 @@ import { useSettings } from "@/lib/settings";
 import { clubStore, myStore, useClub, useWho } from "@/lib/club/store";
 import { recordPass, today } from "@/lib/club/model";
 import { passCodeFor } from "@/lib/passcode";
-import { isYoungGrade } from "@/lib/young";
+import { isEarlyReader } from "@/lib/young";
 import { speak } from "@/lib/speech";
 import { puzzleExercises } from "@/content/puzzles";
 import type { Exercise } from "@/content/types";
@@ -23,7 +23,7 @@ export function StudentLesson({ id }: { id: string }) {
   const club = useClub();
   const who = useWho();
   const kid = club.kids.find((k) => k.id === who.kidId) ?? null;
-  const young = kid ? (isYoungGrade(kid.grade) ?? settings.young) : settings.young;
+  const young = isEarlyReader(kid, settings.young);
   const readAloud = settings.readAloud;
   const [phase, setPhase] = useState<Phase>({ p: "intro" });
   const title = young ? (lesson.kidTitle ?? lesson.title) : lesson.title;

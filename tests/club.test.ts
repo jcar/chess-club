@@ -66,3 +66,20 @@ describe("club model", () => {
     expect(parseRosterFragment("#roster=!!!")).toBeNull();
   });
 });
+
+describe("easy reading", async () => {
+  const { isEarlyReader } = await import("@/lib/young");
+  it("is the kid's own setting first, then a K–2 guess, then the device", () => {
+    expect(isEarlyReader({ grade: "6", earlyReader: true }, false)).toBe(true);
+    expect(isEarlyReader({ grade: "1", earlyReader: false }, true)).toBe(false);
+    expect(isEarlyReader({ grade: "K" }, false)).toBe(true);
+    expect(isEarlyReader({ grade: "6" }, false)).toBe(false);
+    expect(isEarlyReader(null, true)).toBe(true);
+  });
+  it("survives the roster link", () => {
+    const c = addKid(addKid({ ...EMPTY_CLUB }, "Ana", "6"), "Ben", "1");
+    c.kids[0].earlyReader = true;
+    const back = parseRosterFragment("#" + rosterFragment(c))!;
+    expect(back.kids.map((k) => k.earlyReader)).toEqual([true, undefined]);
+  });
+});

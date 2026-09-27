@@ -46,7 +46,7 @@ export function TeacherLesson({ id }: { id: string }) {
           🔑 Answer key
         </LinkButton>
         <LinkButton href={`/print/lesson/${lesson.id}/?young=1`} tone="soft" className="py-3">
-          🖨 K–2 worksheet
+          🖨 Easy-reading worksheet
         </LinkButton>
       </div>
 
@@ -83,7 +83,7 @@ export function TeacherLesson({ id }: { id: string }) {
         </ol>
         {lesson.k2Tip && (
           <Card className="bg-primary-soft">
-            <b>With K–2:</b> {lesson.k2Tip}
+            <b>With younger kids:</b> {lesson.k2Tip}
           </Card>
         )}
         {lesson.commonMistakes && (

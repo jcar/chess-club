@@ -6,12 +6,11 @@
 export type Square = string; // "e4"
 export type Uci = string; // "e2e4", "e7e8q"
 export type Orientation = "white" | "black";
-export type GradeBand = "K-2" | "3-5" | "6-8" | "9-12";
 
 /** Wording that can differ for the youngest kids. `kid` falls back to `text`. */
 export interface Words {
   text: string;
-  /** K–2 wording: short, concrete, read aloud. */
+  /** Easy-reading wording for early readers (any age): short, concrete, read aloud. */
   kid?: string;
 }
 
@@ -22,7 +21,7 @@ interface ExerciseBase {
   prompt: Words;
   hint?: Words;
   orientation?: Orientation;
-  /** Star marks shown only in K–2 mode, to help non-readers (e.g. "tap the star"). */
+  /** Star marks shown only in easy-reading mode, to help non-readers (e.g. "tap the star"). */
   kidMarks?: Square[];
 }
 
@@ -124,7 +123,7 @@ export interface Lesson {
   /** Things the teacher needs on the table. */
   materials: string[];
   script: ScriptBeat[];
-  /** Adjustments for the youngest kids. */
+  /** Teaching tip for younger kids (shown to the teacher; not a level restriction). */
   k2Tip?: string;
   /** What to watch for and how to fix it. */
   commonMistakes?: string[];
@@ -143,7 +142,6 @@ export interface Step {
   n: number;
   title: string;
   kidTitle: string;
-  grades: string;
   summary: string;
   lessons: Lesson[];
   /** Planned but not yet written. */

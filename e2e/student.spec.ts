@@ -93,3 +93,17 @@ test("extra Lichess puzzles run in student mode", async ({ page }) => {
   await expect(page.getByTestId("prompt")).toContainText(/to move\. (Find the fork|Attack two things)/);
   await expect(page.getByLabel(/Puzzles 1 of 8/)).toBeVisible();
 });
+
+test("a 6th grader starting fresh gets Step 1, and easy reading is their choice", async ({ page }) => {
+  await page.goto("./teach/roster/");
+  await page.getByTestId("kid-name").fill("Sam");
+  await page.getByLabel("Grade").selectOption("6");
+  await page.getByRole("button", { name: "Add kid" }).click();
+  await page.goto("./student/");
+  await page.getByRole("button", { name: "Sam" }).click();
+  await expect(page.getByTestId("lesson-s1-board")).toContainText("The Chessboard"); // regular wording
+  await page.getByTestId("easy-reading").click();
+  await expect(page.getByTestId("lesson-s1-board")).toContainText("The Board Is a Town");
+  await page.reload();
+  await expect(page.getByTestId("easy-reading")).toBeChecked(); // saved to Sam, not lost
+});

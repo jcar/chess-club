@@ -226,7 +226,7 @@ export const step4: Lesson[] = [
     step: 4,
     title: "En Passant",
     kidTitle: "The Sneaky Pawn Capture",
-    goal: "Kids can capture en passant and know it only works right away. (Best for grade 2 and up.)",
+    goal: "Kids can capture en passant and know it only works right away. (Skip it for the youngest beginners.)",
     minutes: 15,
     materials: ["One board and a few pawns per pair"],
     script: [

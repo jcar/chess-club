@@ -176,7 +176,7 @@ export function Devices() {
           <h2 className="text-xl font-bold">Read-aloud</h2>
           <label className="mt-2 flex items-center gap-3">
             <input type="checkbox" className="h-5 w-5" checked={settings.readAloud} onChange={(e) => settingsStore.update((s) => ({ ...s, readAloud: e.target.checked }))} />
-            Read instructions out loud in little kids mode (uses the device&apos;s built-in voice)
+            Read instructions out loud in easy-reading mode (uses the device&apos;s built-in voice)
           </label>
         </Card>
 

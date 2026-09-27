@@ -320,7 +320,7 @@ export const step2: Lesson[] = [
     step: 2,
     title: "Reading and Writing Moves",
     kidTitle: "Square Names",
-    goal: "Kids can name any square and read simple moves like Nf3 and Bxc6. (Grade 3 and up; K–2 can just do square names.)",
+    goal: "Kids can name any square and read simple moves like Nf3 and Bxc6. (Early readers can stick to square names.)",
     minutes: 15,
     materials: ["One board per pair", "Blank scoresheets (print a lesson worksheet's back, or any lined paper)"],
     script: [
@@ -345,11 +345,11 @@ export const step2: Lesson[] = [
       title: "Write-It-Down Game",
       kidTitle: "Captain Coordinates",
       minutes: 10,
-      setup: "Pairs, a normal game, and a scoresheet each. K–2: an empty board and a few pawns.",
+      setup: "Pairs, a normal game, and a scoresheet each. Early readers: an empty board and a few pawns.",
       rules: [
         "Play slowly. After every move, both players write it down.",
         "After 10 moves, swap scoresheets and check each other's.",
-        "K–2: one kid calls a square name, the other puts a pawn on it. Swap after five.",
+        "Early readers: one kid calls a square name, the other puts a pawn on it. Swap after five.",
       ],
     },
     practice: [

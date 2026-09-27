@@ -39,7 +39,7 @@ export function Worksheet({ id }: { id: string }) {
           <input type="checkbox" checked={answerKey} onChange={(e) => setParam("key", e.target.checked)} /> Answer key
         </label>
         <label className="flex items-center gap-2">
-          <input type="checkbox" checked={young} onChange={(e) => setParam("young", e.target.checked)} /> K–2 wording
+          <input type="checkbox" checked={young} onChange={(e) => setParam("young", e.target.checked)} /> Easy reading (short sentences, bigger boards)
         </label>
         {sets > 0 && (
           <label className="flex items-center gap-2">

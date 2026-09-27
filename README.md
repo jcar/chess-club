@@ -5,11 +5,12 @@ teacher or parent volunteer who has to run chess club and may not play much them
 
 - **Ready-to-run lessons.** Each lesson has a word-for-word script, demo boards,
   a game for the tables, practice and a pass check. Kids move up by **skill,
-  not grade**, through a 9-step ladder.
+  not age**, through a 9-step ladder. A 6th grader who has never played starts
+  at Step 1 like everyone else.
 - **Present mode.** One big board and one talking point at a time, for a projector or TV.
 - **iPad or paper.** The same practice and pass check runs as tap-to-solve
-  screens on an iPad (with read-aloud for non-readers) or prints as a worksheet
-  with an answer key.
+  screens on an iPad or prints as a worksheet with an answer key. An optional
+  easy-reading mode (simpler words, read-aloud) helps kids who can't read well yet.
 - **Roster & progress.** Attendance, who passed what, certificates. Kids on an
   anonymous iPad get a pass code to show the teacher.
 - **Plan today.** Mark who's here and get groups by level, a timed agenda and a print list.

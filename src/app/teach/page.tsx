@@ -38,7 +38,7 @@ export default function TeachHome() {
         <div>
           <h2 className="text-2xl font-bold">Lessons</h2>
           <p className="text-ink-soft">
-            Kids move up by skill, not grade. Each lesson has a script you can read aloud, a game for the tables, and practice that works on iPads or paper.
+            Kids move up by skill, not age. Everyone new to chess starts at Step 1, whether they&apos;re in kindergarten or 8th grade, and kids who already play can be placed higher from the Roster. Each lesson has a script you can read aloud, a game for the tables, and practice that works on iPads or paper.
           </p>
         </div>
         {STEPS.map((s) => (
@@ -50,7 +50,7 @@ export default function TeachHome() {
                   Step {s.n}: {s.title}
                 </h3>
                 <p className="text-sm text-ink-soft">
-                  Typical grades {s.grades} · {s.summary}
+                  {s.summary}
                 </p>
               </div>
               {s.comingSoon && <span className="rounded-full bg-sunk px-3 py-1 text-sm">Coming soon</span>}

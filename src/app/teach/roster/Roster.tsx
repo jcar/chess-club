@@ -8,6 +8,7 @@ import { Button, Card, PageHeader, StepDot } from "@/components/ui/ui";
 import { clubStore, useClub } from "@/lib/club/store";
 import { addKid, currentStep, hasPassed, recordPass, removePass, stepProgress, today, toggleAttendance, updateKid, type Club, type Kid } from "@/lib/club/model";
 import { lessonForCode } from "@/lib/passcode";
+import { isEarlyReader } from "@/lib/young";
 
 export const GRADES = ["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
 
@@ -193,6 +194,10 @@ function KidDetail({ club, kid }: { club: Club; kid: Kid }) {
                 </option>
               ))}
             </select>
+          </label>
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" className="h-5 w-5 accent-[var(--primary)]" checked={isEarlyReader(kid, false)} onChange={(e) => upd({ earlyReader: e.target.checked })} />
+            Easy reading on the iPad (simpler words, read aloud)
           </label>
           <p className="text-sm text-ink-soft">Came to {attended} session{attended === 1 ? "" : "s"}</p>
           <Button
