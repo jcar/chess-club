@@ -215,6 +215,7 @@ export const step2: Lesson[] = [
     ],
     passMark: 2,
     sources: [CFC, HTW],
+    extra: "hangingPiece",
   },
 
   {

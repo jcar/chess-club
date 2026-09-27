@@ -6,6 +6,7 @@ import { getLesson, getStep } from "@/content/curriculum";
 import type { Exercise, Lesson } from "@/content/types";
 import { ExercisePrint } from "@/components/exercise/ExercisePrint";
 import { passCodeFor } from "@/lib/passcode";
+import { PUZZLE_CREDIT, puzzleExercises } from "@/content/puzzles";
 
 export function Worksheet({ id }: { id: string }) {
   const lesson = getLesson(id)!;
@@ -15,10 +16,14 @@ export function Worksheet({ id }: { id: string }) {
   const answerKey = params.get("key") === "1";
   const young = params.get("young") === "1";
   const title = young ? (lesson.kidTitle ?? lesson.title) : lesson.title;
+  const extraAll = lesson.extra ? puzzleExercises(lesson.extra) : [];
+  const sets = Math.floor(extraAll.length / PER_SET);
+  const set = Math.min(sets, Math.max(1, Number(params.get("set")) || 1));
+  const extra = params.get("extra") === "1" ? extraAll.slice((set - 1) * PER_SET, set * PER_SET) : [];
 
-  const set = (k: string, on: boolean) => {
+  const setParam = (k: string, on: boolean, value = "1") => {
     const q = new URLSearchParams(params.toString());
-    if (on) q.set(k, "1");
+    if (on) q.set(k, value);
     else q.delete(k);
     const s = q.toString();
     router.replace(s ? `?${s}` : "?");
@@ -31,11 +36,25 @@ export function Worksheet({ id }: { id: string }) {
           ← Lesson
         </Link>
         <label className="flex items-center gap-2">
-          <input type="checkbox" checked={answerKey} onChange={(e) => set("key", e.target.checked)} /> Answer key
+          <input type="checkbox" checked={answerKey} onChange={(e) => setParam("key", e.target.checked)} /> Answer key
         </label>
         <label className="flex items-center gap-2">
-          <input type="checkbox" checked={young} onChange={(e) => set("young", e.target.checked)} /> K–2 wording
+          <input type="checkbox" checked={young} onChange={(e) => setParam("young", e.target.checked)} /> K–2 wording
         </label>
+        {sets > 0 && (
+          <label className="flex items-center gap-2">
+            <input type="checkbox" checked={extra.length > 0} onChange={(e) => setParam("extra", e.target.checked)} data-testid="extra-toggle" /> Extra puzzles
+            {extra.length > 0 && (
+              <select value={set} onChange={(e) => setParam("set", true, e.target.value)} className="rounded px-1 ring-1 ring-line" aria-label="Puzzle set">
+                {Array.from({ length: sets }, (_, i) => (
+                  <option key={i} value={i + 1}>
+                    Set {i + 1}
+                  </option>
+                ))}
+              </select>
+            )}
+          </label>
+        )}
         <button type="button" onClick={() => window.print()} className="ml-auto rounded-xl bg-primary px-5 py-2 font-semibold text-primary-ink" data-testid="print">
           🖨 Print
         </button>
@@ -63,17 +82,35 @@ export function Worksheet({ id }: { id: string }) {
             )
           }
         />
+        {[0, 1].map((half) =>
+          extra.length > half * 4 ? (
+            <Sheet
+              key={half}
+              lesson={lesson}
+              stepTitle={step.title}
+              title={title}
+              heading={`Extra puzzles · set ${set}${half ? " (continued)" : ""}${answerKey ? " (answer key)" : ""}`}
+              items={extra.slice(half * 4, half * 4 + 4)}
+              start={half * 4}
+              young={young}
+              answerKey={answerKey}
+              footer={<p className="text-xs">{PUZZLE_CREDIT}</p>}
+            />
+          ) : null,
+        )}
         {answerKey && <GameCard lesson={lesson} />}
       </div>
     </div>
   );
 }
 
+const PER_SET = 8;
+
 function PageBox({ children }: { children: React.ReactNode }) {
   return <section className="print-page mx-auto w-full bg-white p-[0.4in] shadow print:p-0 print:shadow-none">{children}</section>;
 }
 
-function Sheet({ lesson, stepTitle, title, heading, items, young, answerKey, footer }: { lesson: Lesson; stepTitle: string; title: string; heading: string; items: Exercise[]; young: boolean; answerKey: boolean; footer?: React.ReactNode }) {
+function Sheet({ lesson, stepTitle, title, heading, items, young, answerKey, footer, start = 0 }: { lesson: Lesson; stepTitle: string; title: string; heading: string; items: Exercise[]; young: boolean; answerKey: boolean; footer?: React.ReactNode; start?: number }) {
   return (
     <PageBox>
       <header className="mb-3 flex items-end justify-between gap-4 border-b-2 border-black pb-2">
@@ -88,7 +125,7 @@ function Sheet({ lesson, stepTitle, title, heading, items, young, answerKey, foo
       </header>
       <div className={`grid gap-3 ${young ? "grid-cols-2" : "grid-cols-2"}`}>
         {items.map((ex, i) => (
-          <ExercisePrint key={ex.id} ex={ex} n={i + 1} young={young} answerKey={answerKey} />
+          <ExercisePrint key={ex.id} ex={ex} n={start + i + 1} young={young} answerKey={answerKey} />
         ))}
       </div>
       {footer && <footer className="mt-4 border-t border-black pt-2 text-sm">{footer}</footer>}

@@ -39,7 +39,8 @@ export interface StarsExercise extends ExerciseBase {
   stars: Square[];
 }
 
-export type MoveGoal = "capture" | "check" | "mate" | "escape" | "any";
+/** "win": the move wins at least a minor piece against best defence (verified by lib/chess/tactics). */
+export type MoveGoal = "capture" | "check" | "mate" | "escape" | "win" | "any";
 
 /**
  * Play one move. `answers` lists every accepted move. The validator proves each
@@ -134,6 +135,8 @@ export interface Lesson {
   passMark: number;
   /** Where the author took the teaching order from (titles/chapters only, never text). */
   sources: string[];
+  /** Extra practice drawn from the Lichess puzzle set for this theme (see content/puzzles.ts). */
+  extra?: "mateIn1" | "hangingPiece" | "fork" | "pin" | "skewer";
 }
 
 export interface Step {

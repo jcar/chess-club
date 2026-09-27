@@ -86,3 +86,10 @@ test("en passant works with tap-to-move", async ({ page }) => {
   await tapSquare(page, "d6");
   await expect(page.getByTestId("feedback-right")).toBeVisible();
 });
+
+test("extra Lichess puzzles run in student mode", async ({ page }) => {
+  await page.goto("./student/lesson/s6-fork/");
+  await page.getByTestId("extra").click();
+  await expect(page.getByTestId("prompt")).toContainText(/to move\. (Find the fork|Attack two things)/);
+  await expect(page.getByLabel(/Puzzles 1 of 8/)).toBeVisible();
+});

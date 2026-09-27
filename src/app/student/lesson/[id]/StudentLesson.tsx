@@ -12,8 +12,10 @@ import { recordPass, today } from "@/lib/club/model";
 import { passCodeFor } from "@/lib/passcode";
 import { isYoungGrade } from "@/lib/young";
 import { speak } from "@/lib/speech";
+import { puzzleExercises } from "@/content/puzzles";
+import type { Exercise } from "@/content/types";
 
-type Phase = { p: "intro" } | { p: "game" } | { p: "practice"; i: number } | { p: "checkIntro" } | { p: "check"; i: number; right: number } | { p: "result"; right: number };
+type Phase = { p: "intro" } | { p: "game" } | { p: "extra"; list: Exercise[]; i: number; right: number } | { p: "practice"; i: number } | { p: "checkIntro" } | { p: "check"; i: number; right: number } | { p: "result"; right: number };
 
 export function StudentLesson({ id }: { id: string }) {
   const lesson = getLesson(id)!;
@@ -46,11 +48,11 @@ export function StudentLesson({ id }: { id: string }) {
         </Link>
         <span className="h-4 w-4 rounded-full" style={{ background: `var(--step-${lesson.step})` }} aria-hidden />
         <h1 className="flex-1 truncate text-xl font-bold sm:text-2xl">{title}</h1>
-        {(phase.p === "practice" || phase.p === "check") && (
+        {(phase.p === "practice" || phase.p === "check" || (phase.p === "extra" && phase.i < phase.list.length)) && (
           <Progress
-            label={phase.p === "practice" ? "Practice" : "Challenge"}
+            label={phase.p === "practice" ? "Practice" : phase.p === "extra" ? "Puzzles" : "Challenge"}
             at={phase.i}
-            total={phase.p === "practice" ? lesson.practice.length : total}
+            total={phase.p === "practice" ? lesson.practice.length : phase.p === "extra" ? phase.list.length : total}
           />
         )}
       </header>
@@ -64,6 +66,20 @@ export function StudentLesson({ id }: { id: string }) {
           {lesson.activity.game && lesson.activity.fen && (
             <BigButton tone="soft" onClick={() => setPhase({ p: "game" })} testId="play-game">
               🎮 Play {lesson.activity.kidTitle ?? lesson.activity.title}
+            </BigButton>
+          )}
+          {lesson.extra && (
+            <BigButton
+              tone="soft"
+              testId="extra"
+              onClick={() => {
+                // A fresh random handful each time, so repeat visits feel new.
+                const all = puzzleExercises(lesson.extra!);
+                const list = [...all].sort(() => Math.random() - 0.5).slice(0, 8);
+                setPhase({ p: "extra", list, i: 0, right: 0 });
+              }}
+            >
+              🧩 Extra puzzles
             </BigButton>
           )}
           <button type="button" className="text-lg text-ink-soft underline" onClick={() => setPhase({ p: "checkIntro" })}>
@@ -86,6 +102,32 @@ export function StudentLesson({ id }: { id: string }) {
           onNext={() => setPhase(phase.i + 1 < lesson.practice.length ? { p: "practice", i: phase.i + 1 } : { p: "checkIntro" })}
         />
       )}
+
+      {phase.p === "extra" &&
+        (phase.i < phase.list.length ? (
+          <ExerciseScreen
+            key={`x-${phase.list[phase.i].id}`}
+            ex={phase.list[phase.i]}
+            mode="practice"
+            young={young}
+            readAloud={readAloud}
+            onNext={(ok) => setPhase({ ...phase, i: phase.i + 1, right: phase.right + (ok ? 1 : 0) })}
+          />
+        ) : (
+          <section className="flex flex-1 flex-col items-center justify-center gap-5 text-center" data-testid="extra-done">
+            <p className="text-6xl" aria-hidden>
+              🧩
+            </p>
+            <h2 className="text-4xl font-bold">Nice work!</h2>
+            <p className="text-2xl text-ink-soft">
+              {phase.right} of {phase.list.length} on the first try.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <BigButton onClick={() => setPhase({ p: "intro" })}>Done</BigButton>
+            </div>
+            <p className="text-sm text-ink-soft">Puzzles from lichess.org</p>
+          </section>
+        ))}
 
       {phase.p === "checkIntro" && (
         <section className="flex flex-1 flex-col items-center justify-center gap-6 text-center">

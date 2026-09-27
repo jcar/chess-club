@@ -34,6 +34,13 @@ design is in `~/.claude/plans/i-want-to-build-unified-newell.md`. Sibling projec
   `currentStep`), `store.ts` (localStorage stores), `pairing.ts` (round robin,
   Swiss, ladder), `planner.ts` (groups by step + agenda that always sums to the
   session length), `share.ts` (roster-only link in the URL fragment).
+- `src/lib/chess/tactics.ts`: small alpha-beta material search. Powers the `win`
+  move goal: the validator proves each answer wins ≥2 points against best defence
+  and that the key lists every such move. Slow (~25 s for all content), fine offline.
+- `src/content/puzzles.ts` + `src/content/puzzles/*.json`: Lichess puzzles (CC0),
+  built by `npm run build:puzzles` from `scripts/.cache/lichess_db_puzzle.csv.zst`
+  (300 MB, gitignored; download command is in `scripts/build-puzzles.ts`). A lesson's
+  `extra` theme adds them as extra practice (iPad button + worksheet sets of 8).
 - `src/lib/passcode.ts`: `S<step>-L<lesson>-<checksum>` codes carry passes from
   an anonymous iPad (or paper) to the teacher's roster.
 - `src/lib/chess/minibot.ts`: rule-based bot for the mini-games (pawn races, piece

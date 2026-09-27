@@ -7,6 +7,7 @@ import { step2 } from "./lessons/step-2";
 import { step3 } from "./lessons/step-3";
 import { step4 } from "./lessons/step-4";
 import { step5 } from "./lessons/step-5";
+import { step6 } from "./lessons/step-6";
 
 export const STEPS: Step[] = [
   {
@@ -21,7 +22,7 @@ export const STEPS: Step[] = [
   { n: 3, title: "Check & Checkmate", kidTitle: "Check & Checkmate", grades: "K–5", summary: "Giving check, the three ways out of check, and checkmate in one.", lessons: step3 },
   { n: 4, title: "Special Rules & Draws", kidTitle: "Special Moves", grades: "1–8", summary: "Castling, promotion, en passant, and every way a game can be drawn.", lessons: step4 },
   { n: 5, title: "Finish the Game", kidTitle: "Finish the Game", grades: "2–8", summary: "The ladder mate and checkmating with king and queen or king and rook.", lessons: step5 },
-  { n: 6, title: "Tactics I + CCA", kidTitle: "Tricks & Traps", grades: "2–8", summary: "Forks, pins and skewers, and the Checks-Captures-Attacks habit.", lessons: [], comingSoon: true },
+  { n: 6, title: "Tactics I + CCA", kidTitle: "Tricks & Traps", grades: "2–8", summary: "Forks, pins and skewers, and the Checks-Captures-Attacks habit.", lessons: step6 },
   { n: 7, title: "Starting Well", kidTitle: "Starting Well", grades: "3–12", summary: "Center, develop, castle; opening traps; a first plan with each color.", lessons: [], comingSoon: true },
   { n: 8, title: "Club Player", kidTitle: "Club Player", grades: "5–12", summary: "Deeper tactics, king-and-pawn endings, and basic strategy.", lessons: [], comingSoon: true },
   { n: 9, title: "Advanced Track", kidTitle: "Advanced Track", grades: "7–12", summary: "Self-study packets: imbalances, pawn structure, minor pieces.", lessons: [], comingSoon: true },

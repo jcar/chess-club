@@ -4,6 +4,7 @@
 import type { Exercise, Lesson } from "@/content/types";
 import { isSandbox, load, movesMeeting, turnOf } from "@/lib/chess/rules";
 import { answerFor } from "./answers";
+import { winningMoves } from "@/lib/chess/tactics";
 
 const SQUARE = /^[a-h][1-8]$/;
 
@@ -60,7 +61,7 @@ export function validateExercise(ex: Exercise, where: string): string[] {
       }
       if (ex.goal === "escape" && !load(ex.fen).inCheck()) errs.push(`${at}: "escape" but the side to move isn't in check`);
       const legal = movesMeeting(ex.fen, "any");
-      const meeting = movesMeeting(ex.fen, ex.goal);
+      const meeting = ex.goal === "win" ? winningMoves(ex.fen) : movesMeeting(ex.fen, ex.goal);
       // A promotion is four moves (=Q, =R, =B, =N); the app always promotes to a
       // queen, so compare on from+to only.
       const same = (a: string, b: string) => a.slice(0, 4) === b.slice(0, 4);

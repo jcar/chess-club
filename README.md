@@ -27,7 +27,7 @@ device, and it works offline after the first visit.
 | 3 | Check & Checkmate | ✅ 3 lessons |
 | 4 | Special Rules & Draws | ✅ 4 lessons |
 | 5 | Finish the Game | ✅ 3 lessons |
-| 6 | Tactics I + CCA | planned |
+| 6 | Tactics I + CCA | ✅ 4 lessons |
 | 7 | Starting Well | planned |
 | 8 | Club Player | planned |
 | 9 | Advanced Track | planned |

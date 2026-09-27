@@ -3,6 +3,7 @@
 
 import type { Exercise, Square, Uci } from "@/content/types";
 import { destinations, fewestMovesToStars, load } from "@/lib/chess/rules";
+import { puzzleLine } from "@/content/puzzles";
 
 export type Answer =
   | { kind: "squares"; squares: Square[] } // reach: all of them; tap: any one of them
@@ -34,8 +35,12 @@ export function answerLabel(ex: Exercise): string {
   switch (a.kind) {
     case "squares":
       return ex.kind === "reach" ? `${a.squares.length} squares` : a.squares.join(" or ");
-    case "moves":
+    case "moves": {
+      // Lichess puzzles: show the whole winning line so the teacher sees why.
+      const p = puzzleLine(ex.id);
+      if (p && ex.kind === "move" && ex.goal !== "mate") return p.line.join(" ");
       return a.moves.map((m) => sanOf(ex.fen!, m)).join(" or ");
+    }
     case "fewest":
       return `${a.moves} move${a.moves === 1 ? "" : "s"}`;
     case "option":

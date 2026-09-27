@@ -30,3 +30,12 @@ test("planner groups kids who are here", async ({ page }) => {
   await expect(page.getByText("Step 1 · 3 kids")).toBeVisible();
   await expect(page.getByText("3×")).toBeVisible();
 });
+
+test("worksheet can add a set of 8 extra puzzles with credit", async ({ page }) => {
+  await page.goto("./print/lesson/s6-pin/");
+  await page.getByTestId("extra-toggle").click(); // state follows the URL, so not .check()
+  await expect(page.getByTestId("print-exercise")).toHaveCount(6 + 8);
+  await expect(page.getByText("Lichess puzzle database").first()).toBeVisible();
+  await page.getByLabel("Puzzle set").selectOption("2");
+  await expect(page).toHaveURL(/set=2/);
+});

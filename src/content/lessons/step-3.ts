@@ -308,5 +308,6 @@ export const step3: Lesson[] = [
     ],
     passMark: 2,
     sources: [CFC, HTW],
+    extra: "mateIn1",
   },
 ];

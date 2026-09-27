@@ -10,6 +10,7 @@ import { Card, LinkButton, StepDot } from "@/components/ui/ui";
 import { destinations, play } from "@/lib/chess/rules";
 import { answerFor } from "@/lib/exercise/answers";
 import { passCodeFor } from "@/lib/passcode";
+import { puzzleExercises } from "@/content/puzzles";
 
 export function TeacherLesson({ id }: { id: string }) {
   const lesson = getLesson(id)!;
@@ -123,6 +124,11 @@ export function TeacherLesson({ id }: { id: string }) {
           </b>{" "}
           on the pass check. The pass code for this lesson is <b className="font-mono">{passCodeFor(lesson)}</b>.
         </p>
+        {lesson.extra && (
+          <p className="text-ink-soft">
+            🧩 <b>Extra puzzles:</b> {puzzleExercises(lesson.extra).length} real puzzles from lichess.org for kids who finish early: the <b>Extra puzzles</b> button in student mode, or tick <b>Extra puzzles</b> on the worksheet page (8 per set).
+          </p>
+        )}
         <ExerciseGrid title="Practice" items={lesson.practice} />
         <ExerciseGrid title="Pass check" items={lesson.check} />
       </section>
