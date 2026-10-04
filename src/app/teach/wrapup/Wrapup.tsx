@@ -240,6 +240,19 @@ export function Wrapup() {
           )}
         </Card>
 
+        <p className="flex flex-wrap gap-3 text-sm">
+          🎉 Celebrate:
+          <Link href={`/print/club/?what=stamps&date=${date}`} className="text-info underline">
+            print lesson stamps for today&apos;s passes
+          </Link>
+          <Link href="/print/club/?what=chart" className="text-info underline">
+            wall sticker chart
+          </Link>
+          <Link href="/teach/roster/" className="text-info underline">
+            step certificates
+          </Link>
+        </p>
+
         <Card>
           <h2 className="text-lg font-bold">Helping today? Send your ticks to the club keeper</h2>
           <p className="text-ink-soft">If someone else keeps the club on their phone, show them this code and they tap “Scan codes”.</p>
