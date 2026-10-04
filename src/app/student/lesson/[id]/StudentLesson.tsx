@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getLesson, neighbors } from "@/content/curriculum";
 import { BigButton, ExerciseScreen } from "@/components/exercise/ExerciseScreen";
 import { MiniGameScreen } from "@/components/minigame/MiniGameScreen";
+import { HopsGame } from "@/components/minigame/HopsGame";
 import { Confetti } from "@/components/ui/Confetti";
 import { Qr } from "@/components/ui/Qr";
 import { useSettings } from "@/lib/settings";
@@ -14,17 +15,19 @@ import { recordPass, today } from "@/lib/club/model";
 import { passCodeFor } from "@/lib/passcode";
 import { isEarlyReader } from "@/lib/young";
 import { primeSpeechOnFirstTap, speak } from "@/lib/speech";
+import { playCue } from "@/lib/sound";
 import { useStation } from "@/lib/stationStore";
 import type { StationKid } from "@/lib/station";
 import { transferFragment } from "@/lib/transfer";
 import { withBasePath } from "@/lib/basePath";
 import { puzzleExercises } from "@/content/puzzles";
-import type { Exercise } from "@/content/types";
+import type { Exercise, ExtraGame } from "@/content/types";
 
 type Phase =
   | { p: "who" }
   | { p: "intro" }
   | { p: "game" }
+  | { p: "more"; g: ExtraGame }
   | { p: "extra"; list: Exercise[]; i: number; right: number }
   | { p: "practice"; i: number }
   | { p: "checkIntro" }
@@ -81,6 +84,7 @@ export function StudentLesson({ id }: { id: string }) {
       else if (!station) myStore.update((m) => (m.passed[lesson.id] && m.passed[lesson.id].stars >= stars ? m : { passed: { ...m.passed, [lesson.id]: { date: today(), stars } } }));
     }
     setPhase({ p: "result", right });
+    if (passed) playCue("pass");
     if (readAloud && young) speak(passed ? "You passed! Amazing! Show a grown-up your screen." : "Almost! Let's practice some more.");
   };
 
@@ -144,6 +148,11 @@ export function StudentLesson({ id }: { id: string }) {
               🎮 Play {lesson.activity.kidTitle ?? lesson.activity.title}
             </BigButton>
           )}
+          {lesson.moreGames?.map((g) => (
+            <BigButton key={g.id} tone="soft" onClick={() => setPhase({ p: "more", g })} testId={`game-${g.id}`}>
+              {g.hops ? "⭐" : "🎮"} {young ? (g.kidTitle ?? g.title) : g.title}
+            </BigButton>
+          ))}
           {lesson.extra && !young && (
             <BigButton
               tone="soft"
@@ -165,6 +174,13 @@ export function StudentLesson({ id }: { id: string }) {
           )}
         </section>
       )}
+
+      {phase.p === "more" &&
+        (phase.g.hops ? (
+          <HopsGame game={phase.g} young={young} readAloud={readAloud} onExit={() => setPhase({ p: "intro" })} />
+        ) : phase.g.fen && phase.g.game ? (
+          <MiniGameScreen activity={phase.g} young={young} readAloud={readAloud} onExit={() => setPhase({ p: "intro" })} />
+        ) : null)}
 
       {phase.p === "game" && lesson.activity.fen && lesson.activity.game && (
         <MiniGameScreen activity={lesson.activity} young={young} readAloud={readAloud} onExit={() => setPhase({ p: "intro" })} />

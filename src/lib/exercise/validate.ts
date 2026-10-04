@@ -107,6 +107,16 @@ export function validateLesson(lesson: Lesson): string[] {
       }
     }
   }
+  for (const g of lesson.moreGames ?? []) {
+    if (!g.hops && !(g.fen && g.game)) errs.push(`${where}: game ${g.id} needs a start position and a bot game, or hops`);
+    if (g.fen) {
+      try {
+        load(g.fen);
+      } catch {
+        errs.push(`${where}: bad FEN in game ${g.id}`);
+      }
+    }
+  }
   if (lesson.activity.fen) {
     try {
       load(lesson.activity.fen);

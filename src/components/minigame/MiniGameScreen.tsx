@@ -8,9 +8,11 @@ import { Confetti } from "@/components/ui/Confetti";
 import { destinations, load, turnOf } from "@/lib/chess/rules";
 import { botMove, outcome, type Winner } from "@/lib/chess/minibot";
 import { speak } from "@/lib/speech";
+import { playCue } from "@/lib/sound";
 
 interface Props {
-  activity: Activity;
+  /** The lesson's table activity, or one of its extra games (both have a start position and a bot game). */
+  activity: Pick<Activity, "title" | "kidTitle" | "rules" | "fen" | "game">;
   young: boolean;
   readAloud: boolean;
   onExit: () => void;
@@ -36,6 +38,7 @@ export function MiniGameScreen({ activity, young, readAloud, onExit }: Props) {
   const announce = useCallback(
     (w: Winner) => {
       setWinner(w);
+      if (w === game.youPlay) playCue("win");
       const text = w === "draw" ? "It's a draw!" : w === game.youPlay ? "You win!" : "The computer wins this time.";
       if (readAloud && young) speak(text);
     },

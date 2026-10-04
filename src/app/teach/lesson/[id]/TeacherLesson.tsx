@@ -130,6 +130,11 @@ export function TeacherLesson({ id }: { id: string }) {
             ))}
           </ol>
           {lesson.activity.game && <p className="mt-2 text-sm text-ink-soft">🎮 Kids with an iPad can also play this against the computer in student mode.</p>}
+          {lesson.moreGames?.length ? (
+            <p className="mt-2 text-sm text-ink-soft">
+              🎮 Also on the iPad: {lesson.moreGames.map((g) => `${g.title} (${g.rules.join(" ")})`).join("; ")}
+            </p>
+          ) : null}
         </Card>
       </section>
 

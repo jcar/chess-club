@@ -116,3 +116,27 @@ test("warm-ups and table captain cards are ready to use", async ({ page }) => {
   await page.goto("./print/club/?what=captain");
   await expect(page.getByTestId("captain-card")).toHaveCount(2);
 });
+
+test("helper group view: tick a pass, show the code, and Wrap-up takes it", async ({ page }) => {
+  const kids = [
+    { id: "k1", name: "Maya", animal: "🐶" },
+    { id: "k2", name: "Leo", animal: "🦊" },
+  ];
+  const { groupFragment } = await import("../src/lib/groupLink");
+  const d = new Date();
+  const z = (n: number) => String(n).padStart(2, "0");
+  const date = `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}`;
+  await page.goto("./teach/group/#" + groupFragment({ club: "Test Club", date, lesson: "s1-rook", label: "Early readers", adult: "Jason", kids }));
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("The Rook");
+  await page.getByRole("button", { name: "Leo passed" }).click();
+  await page.reload(); // ticks survive a refresh
+  await expect(page.getByRole("button", { name: "Leo passed" })).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Show my code" }).click();
+  const url = await page.locator("[data-testid=group-batch] [data-qr]").getAttribute("data-qr");
+  expect(url).toMatch(/\/teach\/wrapup\/#q=/);
+
+  // The keeper (same browser here) has the roster with the same ids.
+  await page.evaluate((k) => localStorage.setItem("chessclub:club", JSON.stringify({ version: 1, name: "Test Club", kids: k, attendance: {}, passes: {}, games: [], ladder: k.map((x: { id: string }) => x.id) })), kids);
+  await page.goto(url!.replace(/^https?:\/\/[^/]+/, ""));
+  await expect(page.getByTestId("wrapup-log")).toContainText("From Jason: 1 pass, 1 more here.");
+});

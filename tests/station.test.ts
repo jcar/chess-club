@@ -48,3 +48,12 @@ describe("result transfers", () => {
     expect(parseTransfer("hello")).toBeNull();
   });
 });
+
+describe("group links", () => {
+  it("round-trips and rejects a bad checksum", async () => {
+    const { groupFragment, parseGroupFragment } = await import("@/lib/groupLink");
+    const g = { club: "C", date: "2026-10-08", lesson: "s1-rook", label: "Early readers", adult: "Ms. Lopez", kids: [{ id: "a", name: "Maya", animal: "🐶" }] };
+    expect(parseGroupFragment("#" + groupFragment(g))).toEqual(g);
+    expect(parseGroupFragment("#" + groupFragment(g).slice(0, -2) + "ZZ")).toBeNull();
+  });
+});

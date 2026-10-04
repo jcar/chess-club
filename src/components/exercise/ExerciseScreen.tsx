@@ -16,6 +16,7 @@ import { Board } from "@/components/board/Board";
 import { answerFor } from "@/lib/exercise/answers";
 import { destinations, load, matchesAnswer, play, turnOf } from "@/lib/chess/rules";
 import { speak, speakLines } from "@/lib/speech";
+import { playCue } from "@/lib/sound";
 
 export type Mode = "practice" | "check";
 
@@ -69,6 +70,7 @@ export function ExerciseScreen({ ex, mode, young, readAloud, onNext }: Props) {
   const right = useCallback(
     (note?: string) => {
       setStatus({ state: "right", firstTry: misses === 0, note });
+      playCue("right");
       if (readAloud && young) speak(note ?? "Great job!");
     },
     [misses, readAloud, young],
@@ -79,6 +81,7 @@ export function ExerciseScreen({ ex, mode, young, readAloud, onNext }: Props) {
       setMisses((m) => m + 1);
       setShowHint(true);
       setStatus({ state: "wrong", note, final });
+      playCue("wrong");
       if (readAloud && young) speakLines(final ? [note] : [note, words(ex.hint, true)]);
     },
     [mode, readAloud, young, ex.hint],
@@ -386,12 +389,19 @@ function Choice({ ex, status, live, revealed, young, onRight, onWrong }: BodyPro
                   isAnswer ? "bg-good text-white ring-good" : isBad ? "bg-oops/15 ring-oops" : "bg-card ring-line"
                 }`}
               >
-                {young && marker && (
-                  <span className="mr-2" aria-hidden>
-                    {marker.e}
-                  </span>
-                )}
-                {words(o, young)}
+                <span className="flex items-center justify-center gap-3">
+                  {young && marker && (
+                    <span className="text-xl" aria-hidden>
+                      {marker.e}
+                    </span>
+                  )}
+                  {o.pic && (
+                    <span className={young ? "text-5xl leading-none" : "text-3xl leading-none"} aria-hidden>
+                      {o.pic}
+                    </span>
+                  )}
+                  <span>{words(o, young)}</span>
+                </span>
               </button>
               {young && (
                 <button

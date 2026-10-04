@@ -12,6 +12,8 @@ export interface Words {
   text: string;
   /** Easy-reading wording for early readers (any age): short, concrete, read aloud. */
   kid?: string;
+  /** A picture (emoji or piece symbol) for answer buttons, so non-readers can choose by sight. */
+  pic?: string;
 }
 
 interface ExerciseBase {
@@ -117,6 +119,21 @@ export interface Activity {
   game?: MiniGame;
 }
 
+/**
+ * Another game for the iPad, besides the lesson's table activity: either
+ * against the bot (`fen` + `game`), or a solo "hops" game where a single
+ * piece hops to stars in as few moves as it can.
+ */
+export interface ExtraGame {
+  id: string;
+  title: string;
+  kidTitle?: string;
+  rules: string[];
+  fen?: string;
+  game?: MiniGame;
+  hops?: "N" | "K" | "R" | "B" | "Q";
+}
+
 export interface MiniGame {
   /**
    * promote: first pawn to the far side wins. captureAll: take every enemy
@@ -165,6 +182,8 @@ export interface Lesson {
   sources: string[];
   /** Extra practice drawn from the Lichess puzzle set for this theme (see content/puzzles.ts). */
   extra?: PuzzleTheme;
+  /** More iPad games for this lesson (the table activity's game comes first). */
+  moreGames?: ExtraGame[];
   /**
    * This lesson leans on reading (square names, notation, word problems). A
    * note for the adult on how to run it with early readers, e.g. out loud,

@@ -69,10 +69,10 @@ export default function Guide() {
               <b>Lead (teacher or coach):</b> runs the clock and the warm-up, teaches the whole group from Present mode, and keeps the club on their phone (Wrap-up).
             </li>
             <li>
-              <b>Helpers:</b> each takes a group from the plan. Open the lesson script on your phone (the QR on the pack cover), read the “say” lines, and use a demo board. Walk the tables during games and watch for the lesson&apos;s “common mistakes”.
+              <b>Helpers:</b> each takes a group from the plan. Scan your group&apos;s <b>helper code</b> on the pack cover: your phone shows the script, your kids, the table game and a check-off. Read the “say” lines and use a demo board. Walk the tables during games and watch for the lesson&apos;s “common mistakes”.
             </li>
             <li>
-              <b>Helpers keeping score:</b> scan the roster QR on the pack cover once, tick your group in Wrap-up, then “Show my code” so the lead can scan it.
+              <b>At the end:</b> helpers tap “Show my code” in their group view (or scan the kids&apos; iPad pass codes first with 📷 Scan), and the lead scans it in Wrap-up.
             </li>
             <li>
               <b>Table captains:</b> older kids who already know the moves can coach a younger pair: check the board setup, remind them of the rules, praise good moves. Kids love the job, and teaching locks in their own learning.

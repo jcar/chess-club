@@ -59,6 +59,7 @@ export function ExercisePrint({ ex, n, young, answerKey = false }: Props) {
               <span className={`inline-grid h-4 w-4 place-items-center rounded-full border border-black text-[10px] ${answerKey && i === ex.answer ? "bg-black text-white" : ""}`}>
                 {answerKey && i === ex.answer ? "✓" : ""}
               </span>
+              {o.pic && <span className={young ? "text-2xl" : "text-base"}>{o.pic}</span>}
               {w(o, young)}
             </li>
           ))}

@@ -62,6 +62,12 @@ design is in `~/.claude/plans/i-want-to-build-unified-newell.md`. Sibling projec
   (`#q=…` on `/teach/wrapup/`) or a helper's batch QR; `applyTransfer` in
   `model.ts`. Wrap-up scans with the in-page camera (`components/teach/Scanner.tsx`,
   jsQR lazy-loaded) so results land in the app's own storage even from the Home Screen.
+- `src/lib/groupLink.ts`: a helper's group (lesson + kids) in `/teach/group/#g=…`
+  (QR on the session pack cover): script, check-off, batch code for the keeper.
+- `Lesson.moreGames`: extra iPad games (bot games, or `hops`: one piece hops to
+  stars, `components/minigame/HopsGame.tsx`). `Words.pic`: a picture for answer
+  buttons (non-readers choose by sight). `lib/sound.ts`: Web Audio chimes
+  (`settings.sounds`).
 - Kids have an `animal` emoji (`fillAnimals` on load) so non-readers can find
   their name. Planner inputs are saved per date in `lib/club/planStore.ts`
   (expected kids, adults, minutes 30–90, iPads, whole early-reader group,

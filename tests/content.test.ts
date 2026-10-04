@@ -56,6 +56,11 @@ describe("validator catches bad content", () => {
     expect(errs).not.toMatch(/answer 2/);
   });
 
+  it("flags an extra game with nothing to play", () => {
+    const l = { ...ALL_LESSONS[0], moreGames: [{ id: "g", title: "G", rules: ["r"] }] } as never;
+    expect(validateLesson(l).join()).toMatch(/game g needs/);
+  });
+
   it("flags mate exercises without kings", () => {
     const errs = validateLesson(lesson({ ...base, kind: "move", goal: "mate", fen: board({ Q: "a1" }), answers: ["a1a8"] }));
     expect(errs.join()).toMatch(/needs both kings/);

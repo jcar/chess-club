@@ -9,6 +9,8 @@ export interface Settings {
   /** Easy-reading mode for this device: simpler wording, star marks, read-aloud. */
   young: boolean;
   readAloud: boolean;
+  /** Little chimes for right, wrong and passing. */
+  sounds: boolean;
   /** Teacher PIN that locks student mode to one lesson (stored only here). */
   pin: string | null;
   lockedLesson: string | null;
@@ -17,6 +19,7 @@ export interface Settings {
 export const settingsStore = createLocalStore<Settings>("chessclub:settings", {
   young: false,
   readAloud: true,
+  sounds: true,
   pin: null,
   lockedLesson: null,
 });

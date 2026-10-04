@@ -194,3 +194,24 @@ test("wrap-up: an anonymous pass asks who it was, and a helper's batch code adds
   await page.goto("./teach/wrapup/#" + transferFragment({ kind: "batch", date: localToday(), present: ["k1", "k2"], passes: [["k2", "s1-rook"]], from: "Ms. Lopez" }));
   await expect(page.getByTestId("wrapup-log")).toContainText("From Ms. Lopez: 1 pass, 1 more here.");
 });
+
+test("extra iPad games: King Tag against the bot, and Knight Hops", async ({ page }) => {
+  await page.goto("./student/lesson/s1-queen-king/");
+  await page.getByTestId("game-king-tag").click();
+  await tapSquare(page, "e2");
+  await tapSquare(page, "e3");
+  await expect(page.getByTestId("game-status")).toHaveText("Your move", { timeout: 3000 });
+  await page.goto("./student/lesson/s1-knight/");
+  await page.getByTestId("game-knight-hops").click();
+  await expect(page.getByTestId("hops-status")).toContainText("Star 1 of 5");
+});
+
+test("easy reading shows pictures on answers", async ({ page }) => {
+  await page.goto("./student/go/#" + stationFragment({ club: "Test Club", date: localToday(), lesson: "s1-board", lock: false, easy: true, kids: [] }));
+  await page.getByTestId("start").click();
+  await tapSquare(page, "h1"); // p1: the light corner on the right
+  await page.getByTestId("next").click();
+  await expect(page.getByTestId("option-0")).toContainText("⬜"); // p2: Light / Dark
+  await expect(page.getByTestId("option-1")).toContainText("⬛");
+  await expect(page.getByTestId("option-0")).toContainText("🔴"); // colour marker read aloud as "Red"
+});

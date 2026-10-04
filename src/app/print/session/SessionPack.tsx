@@ -15,7 +15,8 @@ import { Qr } from "@/components/ui/Qr";
 import { useClub } from "@/lib/club/store";
 import { today, type Kid } from "@/lib/club/model";
 import { computePlan, usePlans } from "@/lib/club/planStore";
-import { stationFor } from "@/lib/club/stations";
+import { groupLinkFor, stationFor } from "@/lib/club/stations";
+import { groupFragment } from "@/lib/groupLink";
 import { stationFragment } from "@/lib/station";
 import { rosterFragment } from "@/lib/club/share";
 import { isEarlyReader } from "@/lib/young";
@@ -134,8 +135,8 @@ export function SessionPack() {
                   </div>
                   {origin && (
                     <div className="text-center text-[10px]">
-                      <Qr text={appUrl(origin, `/teach/lesson/${g.lesson.id}/`)} size={78} label={`Script for ${g.lesson.title}`} />
-                      script
+                      <Qr text={`${appUrl(origin, "/teach/group/")}#${groupFragment(groupLinkFor(club, g, date))}`} size={96} label={`Helper code for ${g.lesson.title}`} />
+                      helper: script + kids
                     </div>
                   )}
                 </div>
@@ -158,7 +159,10 @@ export function SessionPack() {
               {rosterUrl && <Qr text={rosterUrl} size={140} label="Roster for helpers" />}
               <div>
                 <p className="font-bold">Helpers&apos; phones</p>
-                <p>Scan this to load the roster (first names only, kept on your phone). At the end, open Coach → Wrap-up, tick your group&apos;s passes, then “Show my code” for the club keeper to scan.</p>
+                <p>
+                  Running a group? Scan its <b>helper code</b> above: your phone shows the script, your kids and a check-off, and at the end “Show my code” for the club keeper to scan. Nothing to set up.
+                </p>
+                <p className="mt-1">Keeping your own club records too? Scan this code once to load the roster (first names only, kept on your phone).</p>
                 <p className="mt-1">Kids on iPads show a pass code when they pass: scan it in Wrap-up.</p>
               </div>
             </div>
