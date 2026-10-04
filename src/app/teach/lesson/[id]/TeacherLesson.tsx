@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getLesson, getStep, neighbors } from "@/content/curriculum";
 import type { Demo, Exercise, Lesson } from "@/content/types";
 import { Board } from "@/components/board/Board";
@@ -17,9 +17,21 @@ export function TeacherLesson({ id }: { id: string }) {
   const lesson = getLesson(id)!;
   const step = getStep(lesson.step)!;
   const { prev, next } = neighbors(id);
-  const [presenting, setPresenting] = useState(false);
+  // Present mode keeps its place in the URL (#present=3), so a refresh or a
+  // shared projector laptop picks up where the teacher was.
+  const [presenting, setPresenting] = useState<number | null>(null);
+  useEffect(() => {
+    const m = window.location.hash.match(/^#present=(\d+)$/);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (m) setPresenting(Number(m[1]));
+  }, []);
+  const exit = useCallback(() => {
+    setPresenting(null);
+    history.replaceState(null, "", window.location.pathname + window.location.search);
+    if (document.fullscreenElement) void document.exitFullscreen?.();
+  }, []);
 
-  if (presenting) return <Present lesson={lesson} onExit={() => setPresenting(false)} />;
+  if (presenting !== null) return <Present lesson={lesson} start={presenting} onExit={exit} />;
 
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-5 px-4 py-4">
@@ -37,7 +49,7 @@ export function TeacherLesson({ id }: { id: string }) {
       </header>
 
       <div className="flex flex-wrap gap-2">
-        <button type="button" onClick={() => setPresenting(true)} className="rounded-xl bg-primary px-5 py-3 text-lg font-semibold text-primary-ink shadow" data-testid="present">
+        <button type="button" onClick={() => setPresenting(0)} className="rounded-xl bg-primary px-5 py-3 text-lg font-semibold text-primary-ink shadow" data-testid="present">
           ▶ Present
         </button>
         <LinkButton href={`/print/lesson/${lesson.id}/`} tone="soft" className="py-3">
@@ -174,14 +186,19 @@ function ExerciseGrid({ title, items }: { title: string; items: Exercise[] }) {
 }
 
 /** Full-screen, one beat at a time, for a projector or TV. The board is live: tap pieces to move them. */
-function Present({ lesson, onExit }: { lesson: Lesson; onExit: () => void }) {
+function Present({ lesson, start, onExit }: { lesson: Lesson; start: number; onExit: () => void }) {
   const beats: { say: string; do?: string; demo?: Demo; ex?: Exercise }[] = [
     ...lesson.script,
     ...lesson.practice.slice(0, 3).map((ex) => ({ say: `Let's try one together: ${printPrompt(ex, false).replace("Draw a dot on", "Point to")}`, demo: ex.fen ? { fen: ex.fen, orientation: ex.orientation } : undefined, ex })),
   ];
-  const [i, setI] = useState(0);
+  const [i, setI] = useState(() => Math.min(Math.max(0, start), beats.length - 1));
   const [reveal, setReveal] = useState(false);
   const beat = beats[i];
+  const swipe = useRef<number | null>(null);
+  useEffect(() => {
+    history.replaceState(null, "", `${window.location.pathname}${window.location.search}#present=${i}`);
+  }, [i]);
+  const canFullscreen = typeof document !== "undefined" && Boolean(document.documentElement.requestFullscreen);
   const go = useCallback((d: number) => {
     setI((x) => Math.min(beats.length - 1, Math.max(0, x + d)));
     setReveal(false);
@@ -199,10 +216,30 @@ function Present({ lesson, onExit }: { lesson: Lesson; onExit: () => void }) {
 
   return (
     <main className="flex min-h-dvh flex-col gap-4 p-4 lg:flex-row lg:items-center lg:gap-10 lg:p-10" data-testid="present-mode">
+      {canFullscreen && (
+        <button
+          type="button"
+          onClick={() => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen())}
+          className="fixed top-3 right-3 z-10 rounded-xl bg-card px-3 py-2 text-sm ring-1 ring-line"
+          aria-label="Full screen"
+        >
+          ⛶
+        </button>
+      )}
       <div className="flex flex-1 justify-center">
         {beat.demo ? <LiveBoard key={i} demo={beat.demo} ex={beat.ex} reveal={reveal} /> : <div className="text-8xl">♟</div>}
       </div>
-      <div className="flex flex-col gap-6 lg:w-[38%]">
+      <div
+        className="flex flex-col gap-6 lg:w-[38%]"
+        onTouchStart={(e) => (swipe.current = e.touches[0].clientX)}
+        onTouchEnd={(e) => {
+          // Swipe the text side (not the board, which uses touches for moves).
+          if (swipe.current === null) return;
+          const dx = e.changedTouches[0].clientX - swipe.current;
+          swipe.current = null;
+          if (Math.abs(dx) > 60) go(dx < 0 ? 1 : -1);
+        }}
+      >
         <p className="text-sm font-semibold text-ink-soft">
           {lesson.title} · {i + 1} / {beats.length}
         </p>
@@ -213,7 +250,7 @@ function Present({ lesson, onExit }: { lesson: Lesson; onExit: () => void }) {
             {reveal ? "Hide answer" : "Show answer"}
           </button>
         )}
-        <div className="flex gap-3">
+        <div className="sticky bottom-0 flex gap-3 bg-paper py-2 lg:static lg:bg-transparent lg:py-0">
           <button type="button" onClick={() => go(-1)} disabled={i === 0} className="rounded-xl bg-card px-5 py-3 text-lg ring-1 ring-line disabled:opacity-40">
             ← Back
           </button>

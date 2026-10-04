@@ -78,3 +78,41 @@ test("club printables: sticker chart, ladder, and certificates for everyone who 
   await page.goto("./print/certificate/?step=1");
   await expect(page.getByText("Nobody has finished Step 1 yet.")).toBeVisible();
 });
+
+test("ladder: a result can't be entered twice after kids swap rungs, and the latest can be undone", async ({ page }) => {
+  await page.goto("./teach/roster/");
+  for (const n of ["Ana", "Ben"]) {
+    await page.getByTestId("kid-name").fill(n);
+    await page.getByRole("button", { name: "Add kid" }).click();
+  }
+  await page.getByLabel("Ana is here").check();
+  await page.getByLabel("Ben is here").check();
+  await page.goto("./teach/play/");
+  await page.getByRole("button", { name: "White won" }).click(); // Ben (lower rung, White) beats Ana
+  await expect(page.getByRole("button", { name: "White won" })).toHaveCount(0);
+  await expect(page.getByText("White won", { exact: true })).toBeVisible();
+  const games = () => page.evaluate(() => JSON.parse(localStorage.getItem("chessclub:club")!).games.length);
+  expect(await games()).toBe(1);
+  await page.reload();
+  await expect(page.getByRole("button", { name: "White won" })).toHaveCount(0); // still recorded after leaving
+  await page.getByRole("button", { name: "Undo" }).click();
+  expect(await games()).toBe(0);
+  await expect(page.getByRole("button", { name: "White won" })).toBeVisible();
+});
+
+test("present mode keeps its place after a refresh", async ({ page }) => {
+  await page.goto("./teach/lesson/s1-rook/");
+  await page.getByTestId("present").click();
+  await page.getByTestId("present-next").click();
+  await page.getByTestId("present-next").click();
+  await expect(page).toHaveURL(/#present=2$/);
+  await page.reload();
+  await expect(page.getByTestId("present-mode")).toContainText("3 /");
+});
+
+test("warm-ups and table captain cards are ready to use", async ({ page }) => {
+  await page.goto("./teach/warmups/");
+  expect(await page.getByTestId("warmup").count()).toBeGreaterThanOrEqual(10);
+  await page.goto("./print/club/?what=captain");
+  await expect(page.getByTestId("captain-card")).toHaveCount(2);
+});

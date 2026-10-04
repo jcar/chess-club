@@ -20,7 +20,7 @@ describe("curriculum", () => {
 });
 
 describe("validator catches bad content", () => {
-  const base = { id: "x", prompt: { text: "Do it" } };
+  const base = { id: "x", prompt: { text: "Do it", kid: "Do it!" } };
   const lesson = (ex: object) => ({ ...ALL_LESSONS[0], id: "t", check: [ex], practice: [{ ...ex, id: "p" }], passMark: 1 }) as never;
 
   it("flags an illegal answer", () => {
@@ -45,6 +45,15 @@ describe("validator catches bad content", () => {
     const fen = board({ K: "e3", P: "e2", k: "e6" });
     expect(validateLesson(lesson({ ...base, kind: "move", goal: "any", margin: 50, fen, answers: ["e3e4"] })).join()).toMatch(/only apply to goal "best"/);
     expect(validateLesson(lesson({ ...base, kind: "move", goal: "best", margin: 50, keeps: "win", fen, answers: ["e3e4"] })).join()).toMatch(/not both/);
+  });
+
+  it("requires easy wording on early steps (prompts, hints, longer answers)", () => {
+    const ex = { id: "x", kind: "choice", prompt: { text: "Which?" }, hint: { text: "Think." }, options: [{ text: "A long answer here" }, { text: "No" }], answer: 1 };
+    const errs = validateLesson(lesson(ex)).join("\n");
+    expect(errs).toMatch(/prompt needs easy wording/);
+    expect(errs).toMatch(/hint needs easy wording/);
+    expect(errs).toMatch(/answer 1 needs easy wording/);
+    expect(errs).not.toMatch(/answer 2/);
   });
 
   it("flags mate exercises without kings", () => {

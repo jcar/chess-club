@@ -17,7 +17,18 @@ const WHAT = [
   { key: "tents", label: "Name tents" },
   { key: "score", label: "Score sheets" },
   { key: "ladder", label: "Ladder chart" },
+  { key: "captain", label: "Table captain cards" },
 ] as const;
+
+/** Tips for older kids coaching a younger pair. Kept short enough to read at a glance. */
+const CAPTAIN = [
+  "Check the board: light square on the right, queen on her own color.",
+  "Let them move. Ask “Is that piece safe?” instead of telling them.",
+  "Point, don't touch: their pieces, their moves.",
+  "Remind them: Checks, Captures, Attacks.",
+  "Say something nice every game: “Great move!” “Good thinking!”",
+  "Stuck or arguing? Raise your hand for a grown-up.",
+];
 
 function chunk<T>(list: T[], n: number): T[][] {
   const out: T[][] = [];
@@ -194,6 +205,27 @@ export function ClubPrint() {
               </div>
             </PageBox>
           ))}
+
+        {what === "captain" && (
+          <PageBox>
+            <div className="flex flex-col gap-[0.3in]">
+              {[0, 1].map((i) => (
+                <div key={i} className="avoid-break flex h-[4.6in] flex-col justify-center rounded-3xl border-4 border-dashed border-black p-6" data-testid="captain-card">
+                  <p className="text-5xl" aria-hidden>
+                    ⭐ ♞
+                  </p>
+                  <h1 className="mt-1 font-display text-4xl font-bold">Table Captain</h1>
+                  <p className="text-sm">You help a younger pair play. A captain is kind, patient and fair.</p>
+                  <ol className="mt-3 list-decimal space-y-1 pl-7 text-lg">
+                    {CAPTAIN.map((t) => (
+                      <li key={t}>{t}</li>
+                    ))}
+                  </ol>
+                </div>
+              ))}
+            </div>
+          </PageBox>
+        )}
 
         {what === "ladder" && (
           <PageBox>

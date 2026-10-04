@@ -123,7 +123,9 @@ export default function Guide() {
             <li>Expect each step to take one and a half to two times as many sessions. Repeat lessons freely; the planner&apos;s “Teach instead” makes that one click.</li>
             <li>Lessons marked 📖 lean on reading (square names, notation). Do them out loud with a demo board, then tick the pass by hand in Wrap-up.</li>
             <li>Keep talk short: one idea, then hands on the pieces. Use the “with younger kids” tip on each lesson page.</li>
-            <li>Warm-ups get the wiggles out: {WARMUPS.slice(0, 4).map((w) => w.title).join(", ")} and more are in the planner.</li>
+            <li>
+              Warm-ups get the wiggles out: {WARMUPS.slice(0, 4).map((w) => w.title).join(", ")} and <Link href="/teach/warmups/" className="text-info underline">more</Link>.
+            </li>
           </ul>
         </Section>
 

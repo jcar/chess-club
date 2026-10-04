@@ -97,6 +97,7 @@ export function validateLesson(lesson: Lesson): string[] {
     ids.add(ex.id);
     errs.push(...validateExercise(ex, where));
   }
+  if (lesson.step <= EASY_READING_STEPS) errs.push(...easyWordingErrors(lesson));
   for (const beat of lesson.script) {
     if (beat.demo) {
       try {
@@ -113,5 +114,24 @@ export function validateLesson(lesson: Lesson): string[] {
       errs.push(`${where}: bad activity FEN`);
     }
   }
+  return errs;
+}
+
+/**
+ * Steps most early readers work in. Every prompt and hint there has easy
+ * wording (`kid`), and so does every answer longer than a word or two, because
+ * that's what read-aloud says to a kid who can't read the screen.
+ */
+export const EASY_READING_STEPS = 4;
+
+function easyWordingErrors(lesson: Lesson): string[] {
+  const errs: string[] = [];
+  for (const ex of [...lesson.practice, ...lesson.check]) {
+    const at = `${lesson.id}/${ex.id}`;
+    if (!ex.prompt.kid) errs.push(`${at}: prompt needs easy wording (kid)`);
+    if (ex.hint && !ex.hint.kid) errs.push(`${at}: hint needs easy wording (kid)`);
+    if (ex.kind === "choice") ex.options.forEach((o, i) => o.text.length > 12 && !o.kid && errs.push(`${at}: answer ${i + 1} needs easy wording (kid)`));
+  }
+  if (!lesson.kidTitle) errs.push(`${lesson.id}: needs a kidTitle`);
   return errs;
 }

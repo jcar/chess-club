@@ -69,7 +69,9 @@ export function Planner() {
               <input type="number" min={0} max={60} value={saved.ipads} onChange={(e) => set({ ipads: Math.max(0, Number(e.target.value) || 0) })} className="w-20 rounded-lg px-2 py-1 ring-1 ring-line" data-testid="plan-ipads" />
             </label>
             <label className="flex items-center gap-2">
-              Warm-up
+              <Link href="/teach/warmups/" className="text-info underline">
+                Warm-up
+              </Link>
               <select value={saved.warmup ?? ""} onChange={(e) => set({ warmup: e.target.value || undefined })} className="rounded-lg px-2 py-1 ring-1 ring-line">
                 <option value="">(none)</option>
                 {WARMUPS.map((w) => (

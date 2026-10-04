@@ -60,7 +60,7 @@ export const step3: Lesson[] = [
         goal: "check",
         answers: ["e4d6", "e4f6"],
         prompt: { text: "Give check with the knight.", kid: "Attack the king with the horse!" },
-        hint: { text: "Which squares does a knight attack from? Count: two, then one to the side." },
+        hint: { text: "Which squares does a knight attack from? Count: two, then one to the side.", kid: "Horse hop: two, then one to the side." },
       },
       {
         id: "p3",
@@ -74,10 +74,10 @@ export const step3: Lesson[] = [
         id: "p4",
         kind: "choice",
         fen: board({ K: "g1", Q: "e2", k: "e8", p: "e5" }),
-        prompt: { text: "Is the black king in check?" },
+        prompt: { text: "Is the black king in check?", kid: "Is the black king in check?" },
         options: [{ text: "Yes" }, { text: "No" }],
         answer: 1,
-        hint: { text: "Something is standing in the way." },
+        hint: { text: "Something is standing in the way.", kid: "Is something in the way?" },
       },
     ],
     check: [
@@ -100,7 +100,7 @@ export const step3: Lesson[] = [
       {
         id: "c3",
         kind: "choice",
-        prompt: { text: "What is it called when a piece attacks the king?" },
+        prompt: { text: "What is it called when a piece attacks the king?", kid: "When a piece attacks the king, we say…" },
         options: [{ text: "Capture" }, { text: "Check" }, { text: "Castle" }],
         answer: 1,
       },
@@ -164,7 +164,7 @@ export const step3: Lesson[] = [
         goal: "escape",
         answers: ["h1g2"],
         prompt: { text: "Get out of check. Only one move works!", kid: "Get out of trouble!" },
-        hint: { text: "Is the queen protected?" },
+        hint: { text: "Is the queen protected?", kid: "Is anyone guarding the queen?" },
       },
       {
         id: "p3",
@@ -179,8 +179,8 @@ export const step3: Lesson[] = [
       {
         id: "c1",
         kind: "choice",
-        prompt: { text: "Which of these is NOT a way out of check?" },
-        options: [{ text: "Move the king" }, { text: "Block" }, { text: "Capture a different piece" }, { text: "Capture the checker" }],
+        prompt: { text: "Which of these is NOT a way out of check?", kid: "Which one does NOT get you out of check?" },
+        options: [{ text: "Move the king", kid: "Move the king" }, { text: "Block" }, { text: "Capture a different piece", kid: "Take a different piece" }, { text: "Capture the checker", kid: "Take the attacker" }],
         answer: 2,
       },
       {
@@ -251,7 +251,7 @@ export const step3: Lesson[] = [
         goal: "mate",
         answers: ["a1a8"],
         prompt: { text: "Checkmate in one move.", kid: "Find checkmate!" },
-        hint: { text: "The king is stuck behind his pawns." },
+        hint: { text: "The king is stuck behind his pawns.", kid: "The king is stuck behind his pawns!" },
       },
       {
         id: "p2",
@@ -260,7 +260,7 @@ export const step3: Lesson[] = [
         goal: "mate",
         answers: ["a7a8", "a7b8", "a7f7"],
         prompt: { text: "Checkmate in one move.", kid: "Find checkmate!" },
-        hint: { text: "Your king can protect the queen." },
+        hint: { text: "Your king can protect the queen.", kid: "Your king can guard the queen." },
       },
       {
         id: "p3",
@@ -269,14 +269,14 @@ export const step3: Lesson[] = [
         goal: "mate",
         answers: ["b1b8"],
         prompt: { text: "Checkmate in one move.", kid: "Find checkmate!" },
-        hint: { text: "One rook already guards the 7th row." },
+        hint: { text: "One rook already guards the 7th row.", kid: "One rook already blocks a row. Use the other one!" },
       },
       {
         id: "p4",
         kind: "choice",
         fen: board({ K: "g1", Q: "g7", k: "g8" }),
-        prompt: { text: "White's queen gives check. Is it checkmate?" },
-        options: [{ text: "Yes" }, { text: "No, the king can capture the queen" }],
+        prompt: { text: "White's queen gives check. Is it checkmate?", kid: "The queen says check. Is it checkmate?" },
+        options: [{ text: "Yes" }, { text: "No, the king can capture the queen", kid: "No, the king can take the queen" }],
         answer: 1,
       },
     ],

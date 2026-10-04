@@ -65,19 +65,40 @@ function ResultButtons({ onResult, current }: { onResult: (r: Result) => void; c
   );
 }
 
-function Ladder({ club, name }: { club: Club; name: (id: string) => string }) {
-  const [shift, setShift] = useState(false);
-  const [done, setDone] = useState<Record<string, Result>>({});
-  const active = club.ladder.filter((id) => club.kids.some((k) => k.id === id && !k.archived));
-  const present = club.attendance[today()] ?? [];
-  const pairs = ladderPairings(active, present, shift);
+/**
+ * Today's ladder games. The pairs are fixed from the ladder as it was when the
+ * day started, so a result that moves kids up doesn't reshuffle the other
+ * games (or let the same game be entered twice). The latest result can be undone.
+ */
+interface LadderDay {
+  date: string;
+  shift: boolean;
+  /** Ladder order when today's pairs were made. */
+  start: string[];
+  results: { key: string; result: Result; gameId: string; ladderBefore: string[] }[];
+}
+const ladderDayStore = createLocalStore<LadderDay>("chessclub:ladderday", { date: "", shift: false, start: [], results: [] });
 
+function Ladder({ club, name }: { club: Club; name: (id: string) => string }) {
+  const stored = useLocalStore(ladderDayStore);
+  const date = today();
+  const active = club.ladder.filter((id) => club.kids.some((k) => k.id === id && !k.archived));
+  const day: LadderDay = stored.date === date ? stored : { date, shift: false, start: club.ladder, results: [] };
+  const present = club.attendance[date] ?? [];
+  const pairs = ladderPairings(day.start.filter((id) => active.includes(id)), present, day.shift);
+  const resultOf = (key: string) => day.results.find((r) => r.key === key);
+  const last = day.results.at(-1);
+
+  // Swap two kids in the full ladder (archived kids keep their place).
   const move = (i: number, d: number) =>
     clubStore.update((c) => {
-      const l = c.ladder.filter((id) => active.includes(id));
-      const j = i + d;
-      if (j < 0 || j >= l.length) return c;
-      [l[i], l[j]] = [l[j], l[i]];
+      const a = active[i];
+      const b = active[i + d];
+      if (!a || !b) return c;
+      const l = [...c.ladder];
+      const ia = l.indexOf(a);
+      const ib = l.indexOf(b);
+      [l[ia], l[ib]] = [l[ib], l[ia]];
       return { ...c, ladder: l };
     });
 
@@ -85,30 +106,53 @@ function Ladder({ club, name }: { club: Club; name: (id: string) => string }) {
     <div className="grid gap-5 md:grid-cols-2">
       <Card>
         <h2 className="text-xl font-bold">Today&apos;s ladder games</h2>
-        <p className="text-sm text-ink-soft">Kids play the kid next to them on the ladder. Beat someone above you and you take their spot. Mark who&apos;s here on the Roster or Plan page.</p>
+        <p className="text-sm text-ink-soft">Kids play the kid next to them on the ladder. Beat someone above you and you take their spot. Mark who&apos;s here in Wrap-up or on the Roster.</p>
         <label className="no-print mt-2 flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={shift} onChange={(e) => setShift(e.target.checked)} /> Shift pairs this week (so the top kid gets a new opponent)
+          <input
+            type="checkbox"
+            checked={day.shift}
+            disabled={day.results.length > 0}
+            onChange={(e) => ladderDayStore.set({ ...day, shift: e.target.checked })}
+          />{" "}
+          Shift pairs this week (so the top kid gets a new opponent)
         </label>
         {pairs.length === 0 && <p className="mt-3 text-ink-soft">Nobody is marked here today.</p>}
         <ul className="mt-3 flex flex-col gap-2">
           {pairs.map((p) => {
             const key = `${p.white}-${p.black}`;
+            const done = resultOf(key);
             return (
               <li key={key} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-sunk px-3 py-2">
                 <span>
                   <b>{name(p.white)}</b> {p.black ? <>(W) vs <b>{name(p.black)}</b> (B)</> : "has a bye: play anyone free"}
                 </span>
-                {p.black && (
-                  <ResultButtons
-                    current={done[key]}
-                    onResult={(r) => {
-                      if (done[key]) return;
-                      record(p.white, p.black!, r);
-                      clubStore.update((c) => ({ ...c, ladder: updateLadder(c.ladder, { white: p.white, black: p.black!, result: r }) }));
-                      setDone((d) => ({ ...d, [key]: r }));
-                    }}
-                  />
-                )}
+                {p.black &&
+                  (done ? (
+                    <span className="flex items-center gap-2 text-sm">
+                      <b>{done.result === "1-0" ? "White won" : done.result === "0-1" ? "Black won" : "Draw"}</b>
+                      {last?.key === key && (
+                        <button
+                          type="button"
+                          className="no-print rounded-lg px-2 py-1 ring-1 ring-line"
+                          onClick={() => {
+                            clubStore.update((c) => ({ ...c, ladder: done.ladderBefore, games: c.games.filter((g) => g.id !== done.gameId) }));
+                            ladderDayStore.set({ ...day, results: day.results.slice(0, -1) });
+                          }}
+                        >
+                          Undo
+                        </button>
+                      )}
+                    </span>
+                  ) : (
+                    <ResultButtons
+                      onResult={(r) => {
+                        const before = clubStore.getSnapshot().ladder;
+                        const gameId = record(p.white, p.black!, r);
+                        clubStore.update((c) => ({ ...c, ladder: updateLadder(c.ladder, { white: p.white, black: p.black!, result: r }) }));
+                        ladderDayStore.set({ ...day, results: [...day.results, { key, result: r, gameId, ladderBefore: before }] });
+                      }}
+                    />
+                  ))}
               </li>
             );
           })}
@@ -176,6 +220,7 @@ function Tournament({ club, name }: { club: Club; name: (id: string) => string }
         {ev.rounds.map((round, r) => (
           <Card key={r} className="avoid-break">
             <h2 className="text-lg font-bold">Round {r + 1}</h2>
+            {r === ev.rounds.length - 1 && <p className="no-print text-xs text-ink-soft">Mis-tap? Tap another result to change it, or the same one again to clear it.</p>}
             <ul className="mt-2 flex flex-col gap-2">
               {round.map((p) => (
                 <li key={`${p.white}-${p.black}`} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-sunk px-3 py-2">
@@ -186,9 +231,17 @@ function Tournament({ club, name }: { club: Club; name: (id: string) => string }
                     <ResultButtons
                       current={resultOf(p)}
                       onResult={(res) => {
-                        if (resultOf(p)) return;
-                        const id = record(p.white, p.black!, res);
-                        eventStore.update((e) => ({ ...e, gameIds: [...e.gameIds, id] }));
+                        const g = games.find((x) => x.white === p.white && x.black === p.black);
+                        if (!g) {
+                          const id = record(p.white, p.black!, res);
+                          eventStore.update((e) => ({ ...e, gameIds: [...e.gameIds, id] }));
+                        } else if (g.result === res) {
+                          // Tap the chosen result again to clear a mis-tap.
+                          clubStore.update((c) => ({ ...c, games: c.games.filter((x) => x.id !== g.id) }));
+                          eventStore.update((e) => ({ ...e, gameIds: e.gameIds.filter((id) => id !== g.id) }));
+                        } else {
+                          clubStore.update((c) => ({ ...c, games: c.games.map((x) => (x.id === g.id ? { ...x, result: res } : x)) }));
+                        }
                       }}
                     />
                   )}

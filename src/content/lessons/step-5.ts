@@ -152,7 +152,7 @@ export const step5: Lesson[] = [
       setup: "White: king e1, queen d1. Black: king e5.",
       rules: [
         "White tries to checkmate. Black tries to survive.",
-        "Stalemate counts as a win for Black.",
+        "Stalemate is only a draw, not a win. Try again and checkmate!",
         "Can White checkmate in 20 moves or fewer?",
         "Swap roles each game.",
       ],
@@ -261,7 +261,7 @@ export const step5: Lesson[] = [
       setup: "White: king e1, rook a1. Black: king e5.",
       rules: [
         "White tries to checkmate. Black tries to survive or capture the rook.",
-        "Stalemate counts as a win for Black.",
+        "Stalemate is only a draw, not a win. Try again and checkmate!",
         "This takes practice! Count your moves and try to beat your record.",
         "Swap roles each game.",
       ],
