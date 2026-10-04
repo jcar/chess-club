@@ -274,7 +274,7 @@ function MoveIt({ ex, status, revealed, young, onRight, onWrong }: BodyProps & {
     } else {
       setShown({ fen: ex.fen, bad: to });
       const why =
-        ex.goal === "capture" && !p.captured ? "That doesn't capture anything." : ex.goal === "check" && !p.check ? "That isn't check." : ex.goal === "mate" && !p.mate ? (p.check ? "Check, but the king can escape!" : "That isn't checkmate.") : ex.goal === "win" ? "That doesn't win anything. Look for checks, captures and attacks!" : "Not that one.";
+        ex.goal === "capture" && !p.captured ? "That doesn't capture anything." : ex.goal === "check" && !p.check ? "That isn't check." : ex.goal === "mate" && !p.mate ? (p.check ? "Check, but the king can escape!" : "That isn't checkmate.") : ex.goal === "win" ? "That doesn't win anything. Look for checks, captures and attacks!" : ex.goal === "best" ? (ex.strict ? "Good try, but that's not the move we're looking for." : "Good try, but there's a stronger move. Look again!") : "Not that one.";
       onWrong(young ? "Not quite! Try another move." : why);
     }
   };

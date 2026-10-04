@@ -33,6 +33,13 @@ const WANT: Want[] = [
   { theme: "fork", count: 60, minRating: 500, maxRating: 1300, maxPlies: 4 },
   { theme: "pin", count: 60, minRating: 500, maxRating: 1400, maxPlies: 4 },
   { theme: "skewer", count: 60, minRating: 500, maxRating: 1400, maxPlies: 4 },
+  { theme: "opening", count: 60, minRating: 600, maxRating: 1300, maxPlies: 4 },
+  { theme: "discoveredAttack", count: 60, minRating: 700, maxRating: 1500, maxPlies: 4 },
+  { theme: "capturingDefender", count: 60, minRating: 700, maxRating: 1500, maxPlies: 4 },
+  { theme: "deflection", count: 60, minRating: 800, maxRating: 1600, maxPlies: 4 },
+  { theme: "intermezzo", count: 60, minRating: 900, maxRating: 1700, maxPlies: 6 },
+  { theme: "pawnEndgame", count: 60, minRating: 800, maxRating: 1600, maxPlies: 6 },
+  { theme: "rookEndgame", count: 60, minRating: 900, maxRating: 1700, maxPlies: 6 },
 ];
 
 export interface Puzzle {
@@ -78,6 +85,8 @@ async function main() {
     n++;
     const r = parse(line);
     if (!r || r.rd > 90 || r.pop < 88 || r.plays < 2000) continue;
+    // "equality" puzzles save a draw; our prompts all say "win".
+    if (r.themes.includes("equality")) continue;
     for (const w of WANT) {
       if (r.themes.includes(w.theme) && r.rating >= w.minRating && r.rating <= w.maxRating && r.moves.length <= w.maxPlies) pools.get(w.theme)!.push(r);
     }

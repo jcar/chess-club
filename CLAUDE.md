@@ -37,6 +37,15 @@ design is in `~/.claude/plans/i-want-to-build-unified-newell.md`. Sibling projec
 - `src/lib/chess/tactics.ts`: small alpha-beta material search. Powers the `win`
   move goal: the validator proves each answer wins ≥2 points against best defence
   and that the key lists every such move. Slow (~25 s for all content), fine offline.
+- `scripts/lib/engineCheck.ts` (+ `scripts/lib/engine.ts`, copied from OpeningLab):
+  Stockfish (devDependency only, never shipped) checks the `best` goal in
+  `npm run validate`. The key must be exactly the moves within `margin` cp of the
+  top move (default 50), or with `keeps: "win" | "draw"` exactly the moves that
+  keep that result (king-and-pawn endings; rook endings are too slow to search).
+  `strict` lets a key list only "our plan" moves, but each must still qualify.
+  Results are cached in `scripts/.cache/engine.json`. `npm run analyze -- "<fen
+  or moves>"` scores every move, for picking positions with a clear answer. The
+  sync validator (unit tests) only checks that `best` answers are legal.
 - `src/content/puzzles.ts` + `src/content/puzzles/*.json`: Lichess puzzles (CC0),
   built by `npm run build:puzzles` from `scripts/.cache/lichess_db_puzzle.csv.zst`
   (300 MB, gitignored; download command is in `scripts/build-puzzles.ts`). A lesson's

@@ -3,13 +3,20 @@
 // a normal "move" exercise, so the iPad, the worksheets and the validator
 // treat it like any hand-written one.
 
-import type { Exercise, Words } from "./types";
+import type { Exercise, PuzzleTheme, Words } from "./types";
 import { movesMeeting } from "@/lib/chess/rules";
 import mateIn1 from "./puzzles/mateIn1.json";
 import hangingPiece from "./puzzles/hangingPiece.json";
 import fork from "./puzzles/fork.json";
 import pin from "./puzzles/pin.json";
 import skewer from "./puzzles/skewer.json";
+import opening from "./puzzles/opening.json";
+import discoveredAttack from "./puzzles/discoveredAttack.json";
+import capturingDefender from "./puzzles/capturingDefender.json";
+import deflection from "./puzzles/deflection.json";
+import intermezzo from "./puzzles/intermezzo.json";
+import pawnEndgame from "./puzzles/pawnEndgame.json";
+import rookEndgame from "./puzzles/rookEndgame.json";
 
 export interface Puzzle {
   id: string;
@@ -19,9 +26,22 @@ export interface Puzzle {
   rating: number;
 }
 
-export type PuzzleTheme = "mateIn1" | "hangingPiece" | "fork" | "pin" | "skewer";
+export type { PuzzleTheme };
 
-const SETS: Record<PuzzleTheme, Puzzle[]> = { mateIn1, hangingPiece, fork, pin, skewer };
+const SETS: Record<PuzzleTheme, Puzzle[]> = {
+  mateIn1,
+  hangingPiece,
+  fork,
+  pin,
+  skewer,
+  opening,
+  discoveredAttack,
+  capturingDefender,
+  deflection,
+  intermezzo,
+  pawnEndgame,
+  rookEndgame,
+};
 
 const PROMPT: Record<PuzzleTheme, (side: string) => Words> = {
   mateIn1: (s) => ({ text: `${s} to move. Checkmate in one.`, kid: `${s} to move. Find checkmate!` }),
@@ -29,6 +49,13 @@ const PROMPT: Record<PuzzleTheme, (side: string) => Words> = {
   fork: (s) => ({ text: `${s} to move. Find the fork.`, kid: `${s} to move. Attack two things at once!` }),
   pin: (s) => ({ text: `${s} to move. Use a pin to win something.`, kid: `${s} to move. Find the pin!` }),
   skewer: (s) => ({ text: `${s} to move. Find the skewer.`, kid: `${s} to move. Find the skewer!` }),
+  opening: (s) => ({ text: `${s} to move. Your opponent made an opening mistake. Punish it!`, kid: `${s} to move. Catch the mistake!` }),
+  discoveredAttack: (s) => ({ text: `${s} to move. Move one piece to uncover an attack by another.`, kid: `${s} to move. Find the surprise attack!` }),
+  capturingDefender: (s) => ({ text: `${s} to move. Remove the defender, then win what it was guarding.`, kid: `${s} to move. Take away the guard!` }),
+  deflection: (s) => ({ text: `${s} to move. Pull a defender away from its job.`, kid: `${s} to move. Pull the guard away!` }),
+  intermezzo: (s) => ({ text: `${s} to move. Don't take back right away. Find the stronger in-between move.`, kid: `${s} to move. Find the sneaky in-between move!` }),
+  pawnEndgame: (s) => ({ text: `${s} to move. Find the winning move in this pawn ending.`, kid: `${s} to move. Find the winning king or pawn move!` }),
+  rookEndgame: (s) => ({ text: `${s} to move. Find the winning move in this rook ending.`, kid: `${s} to move. Find the winning rook move!` }),
 };
 
 export const PUZZLE_CREDIT = "Extra puzzles from the Lichess puzzle database (lichess.org, CC0).";

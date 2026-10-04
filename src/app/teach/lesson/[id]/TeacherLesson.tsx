@@ -11,6 +11,7 @@ import { destinations, play } from "@/lib/chess/rules";
 import { answerFor } from "@/lib/exercise/answers";
 import { passCodeFor } from "@/lib/passcode";
 import { puzzleExercises } from "@/content/puzzles";
+import { OPENINGLAB_URL } from "@/content/links";
 
 export function TeacherLesson({ id }: { id: string }) {
   const lesson = getLesson(id)!;
@@ -127,6 +128,15 @@ export function TeacherLesson({ id }: { id: string }) {
         {lesson.extra && (
           <p className="text-ink-soft">
             🧩 <b>Extra puzzles:</b> {puzzleExercises(lesson.extra).length} real puzzles from lichess.org for kids who finish early: the <b>Extra puzzles</b> button in student mode, or tick <b>Extra puzzles</b> on the worksheet page (8 per set).
+          </p>
+        )}
+        {lesson.openingLab && (
+          <p className="text-ink-soft">
+            🏠 <b>Practice at home:</b> older kids can drill the {lesson.openingLab} in{" "}
+            <a className="font-semibold text-primary underline" href={OPENINGLAB_URL} target="_blank" rel="noopener noreferrer">
+              OpeningLab
+            </a>
+            , our free sister site (works offline too).
           </p>
         )}
         <ExerciseGrid title="Practice" items={lesson.practice} />

@@ -1,0 +1,694 @@
+[
+ {
+  "id": "s92AG",
+  "fen": "r2qkbnr/1pp2ppp/4b3/p3P3/2PN4/8/PP2PPPP/R1BQKB1R b KQkq - 0 8",
+  "answer": "f8b4",
+  "line": [
+   "Bb4+",
+   "Bd2",
+   "Qxd4"
+  ],
+  "rating": 1150
+ },
+ {
+  "id": "vzFSi",
+  "fen": "r4rk1/pp3p2/8/6p1/2nP4/P1PKP3/6R1/2R4q w - - 0 24",
+  "answer": "g2g5",
+  "line": [
+   "Rxg5+",
+   "Kh8",
+   "Rxh1#"
+  ],
+  "rating": 1154
+ },
+ {
+  "id": "9d6S5",
+  "fen": "r1bnk1r1/1pp2p2/p2p4/1P2n2p/P1B1P3/1QP2P2/1B2Rb2/R4N1K b q - 0 20",
+  "answer": "g8g1",
+  "line": [
+   "Rg1+",
+   "Kh2",
+   "Nxf3#"
+  ],
+  "rating": 1164
+ },
+ {
+  "id": "2Jq3S",
+  "fen": "3k4/R6p/2p1R3/3n4/5P2/8/Pr3P1P/6K1 b - - 0 29",
+  "answer": "b2b1",
+  "line": [
+   "Rb1+",
+   "Kg2",
+   "Nxf4+",
+   "Kg3",
+   "Nxe6"
+  ],
+  "rating": 1168
+ },
+ {
+  "id": "tgAAi",
+  "fen": "1r5k/r2p1p2/2p2p2/4p2p/4P3/2PP2Pq/P2Q1P2/1R4K1 w - - 0 25",
+  "answer": "d2h6",
+  "line": [
+   "Qh6+",
+   "Kg8",
+   "Rxb8#"
+  ],
+  "rating": 1172
+ },
+ {
+  "id": "TNXCR",
+  "fen": "r2q2k1/pb3p1p/1p4P1/4r3/5n2/2PB4/PP2QPP1/R3K2R w KQ - 0 19",
+  "answer": "g6h7",
+  "line": [
+   "gxh7+",
+   "Kh8",
+   "Qxe5+"
+  ],
+  "rating": 1173
+ },
+ {
+  "id": "bEjn0",
+  "fen": "2R1r1k1/5ppp/1p6/pP1P4/q7/3QpPP1/1B1bP2P/3R2K1 b - - 0 31",
+  "answer": "a4d1",
+  "line": [
+   "Qxd1+",
+   "Kg2",
+   "Rxc8"
+  ],
+  "rating": 1217
+ },
+ {
+  "id": "LY3wx",
+  "fen": "2k3r1/1pp5/p1n4p/2bNp2r/4R3/P2P2BP/1PPQ1P2/5RK1 b - - 0 23",
+  "answer": "g8g3",
+  "line": [
+   "Rxg3+",
+   "Kh2",
+   "Rhxh3#"
+  ],
+  "rating": 1265
+ },
+ {
+  "id": "Dr8dh",
+  "fen": "6k1/pp3pp1/7p/3pQp2/3r4/1PR2P1K/5q2/8 w - - 0 39",
+  "answer": "c3c8",
+  "line": [
+   "Rc8+",
+   "Kh7",
+   "Qxf5+",
+   "g6",
+   "Qxf7#"
+  ],
+  "rating": 1270
+ },
+ {
+  "id": "dIWOG",
+  "fen": "2r3k1/3R1pp1/p3b2p/1pb5/8/P1N1BP1P/1P4P1/R5K1 b - - 0 25",
+  "answer": "c5e3",
+  "line": [
+   "Bxe3+",
+   "Kf1",
+   "Bxd7"
+  ],
+  "rating": 1275
+ },
+ {
+  "id": "P33Wi",
+  "fen": "3rkb1r/p2n1pp1/1p2p3/2p1P1q1/3p2Q1/3P2P1/PPPN1PKN/R1B2R2 b k - 0 15",
+  "answer": "h8h2",
+  "line": [
+   "Rxh2+",
+   "Kxh2",
+   "Qxg4"
+  ],
+  "rating": 1282
+ },
+ {
+  "id": "QXDI1",
+  "fen": "4kb1r/p2n1pp1/np1Bp3/3p2Pp/2rQ3P/P3PP2/1PP5/2KR2NR b k - 0 17",
+  "answer": "c4d4",
+  "line": [
+   "Rxd4",
+   "Rxd4",
+   "Bxd6"
+  ],
+  "rating": 1286
+ },
+ {
+  "id": "eOwWA",
+  "fen": "r7/1pr4k/2qp1Qp1/4p2p/4P2P/PN4R1/2P3P1/1K3R2 b - - 0 33",
+  "answer": "c6c2",
+  "line": [
+   "Qxc2+",
+   "Ka1",
+   "Rxa3#"
+  ],
+  "rating": 1306
+ },
+ {
+  "id": "FsvFA",
+  "fen": "8/1kp5/8/P4rR1/1PP4p/5r2/3R1PKP/8 b - - 0 39",
+  "answer": "h4h3",
+  "line": [
+   "h3+",
+   "Kf1",
+   "Rxg5"
+  ],
+  "rating": 1310
+ },
+ {
+  "id": "Z2Da9",
+  "fen": "r5k1/1pq1bpp1/p1p2n1p/4p2b/4P2B/2N3Q1/PPP1BPP1/2KR4 w - - 0 18",
+  "answer": "h4f6",
+  "line": [
+   "Bxf6",
+   "Bxf6",
+   "Bxh5"
+  ],
+  "rating": 1315
+ },
+ {
+  "id": "e6jxh",
+  "fen": "r2qk2r/1ppbnp1p/p2p2pb/3N4/P3P3/1B3P2/1PPQ2PP/1R3RK1 w kq - 0 17",
+  "answer": "d5f6",
+  "line": [
+   "Nf6+",
+   "Kf8",
+   "Qxh6#"
+  ],
+  "rating": 1315
+ },
+ {
+  "id": "Fyje9",
+  "fen": "r7/2p2pk1/5npp/1pP5/1Pq1PQ2/3r2P1/7P/2N2RK1 w - - 0 32",
+  "answer": "f4f6",
+  "line": [
+   "Qxf6+",
+   "Kg8",
+   "Nxd3"
+  ],
+  "rating": 1315
+ },
+ {
+  "id": "l1t9r",
+  "fen": "r1b1r3/1p1pQpkp/2n1p1pn/p3PP1P/P5P1/6q1/6B1/3R1RK1 w - - 0 27",
+  "answer": "f5f6",
+  "line": [
+   "f6+",
+   "Kh8",
+   "Qxe8+"
+  ],
+  "rating": 1329
+ },
+ {
+  "id": "OFQoP",
+  "fen": "8/1R6/4p2k/5B2/R7/6PK/1p3r2/3r4 b - - 0 53",
+  "answer": "d1h1",
+  "line": [
+   "Rh1+",
+   "Kg4",
+   "exf5#"
+  ],
+  "rating": 1340
+ },
+ {
+  "id": "YH71J",
+  "fen": "4r2k/6p1/3q3p/p3R3/3P1r2/1P3P2/P1Q3PP/4R1K1 b - - 0 33",
+  "answer": "d6d4",
+  "line": [
+   "Qxd4+",
+   "Kf1",
+   "Rxe5",
+   "Qc8+",
+   "Kh7"
+  ],
+  "rating": 1341
+ },
+ {
+  "id": "sGcUp",
+  "fen": "8/pp2b1k1/4p1pp/8/5NQ1/2P2P2/qP3PKP/3r4 w - - 0 26",
+  "answer": "g4g6",
+  "line": [
+   "Qxg6+",
+   "Kf8",
+   "Nxe6+",
+   "Qxe6",
+   "Qxe6"
+  ],
+  "rating": 1343
+ },
+ {
+  "id": "zHBLR",
+  "fen": "1k1b4/ppp2pp1/2p2n2/4B2b/8/2N2B2/PP3P1P/6K1 w - - 0 20",
+  "answer": "e5f6",
+  "line": [
+   "Bxf6",
+   "Bxf6",
+   "Bxh5"
+  ],
+  "rating": 1344
+ },
+ {
+  "id": "rxVn4",
+  "fen": "3Rnr1k/p4Qpp/8/1p6/1Pp1P3/5P1P/4q1P1/3R3K b - - 0 33",
+  "answer": "e2d1",
+  "line": [
+   "Qxd1+",
+   "Rxd1",
+   "Rxf7"
+  ],
+  "rating": 1371
+ },
+ {
+  "id": "8APQ6",
+  "fen": "r2q1r2/2p3bk/pp1p1npp/3b1p2/5P2/1P3N1P/PBPQB1P1/1R3RK1 w - - 0 20",
+  "answer": "b2f6",
+  "line": [
+   "Bxf6",
+   "Bxf6",
+   "Qxd5"
+  ],
+  "rating": 1373
+ },
+ {
+  "id": "2LEJi",
+  "fen": "r1b2rk1/pp2bppp/2N1pn2/8/2B5/2NqP3/PP3PPP/R1B2RK1 w - - 0 11",
+  "answer": "c6e7",
+  "line": [
+   "Nxe7+",
+   "Kh8",
+   "Bxd3"
+  ],
+  "rating": 1378
+ },
+ {
+  "id": "GCeAn",
+  "fen": "Q4rk1/p1p2p2/1p2b1pp/n4q2/5P2/2NB4/PP4PP/R4RK1 b - - 0 19",
+  "answer": "f5c5",
+  "line": [
+   "Qc5+",
+   "Kh1",
+   "Rxa8"
+  ],
+  "rating": 1382
+ },
+ {
+  "id": "XdA9L",
+  "fen": "1k2r3/p5p1/1p4p1/3P4/2P5/P2n2PP/4R1K1/4R3 b - - 0 32",
+  "answer": "d3e1",
+  "line": [
+   "Nxe1+",
+   "Kf1",
+   "Rxe2",
+   "Kxe2",
+   "Nc2"
+  ],
+  "rating": 1383
+ },
+ {
+  "id": "NYb23",
+  "fen": "r5k1/4p2p/q2p1p2/2pP3n/4PP2/2NN4/2Q3KP/1R6 b - - 0 36",
+  "answer": "a6d3",
+  "line": [
+   "Qxd3",
+   "Qxd3",
+   "Nxf4+",
+   "Kf2",
+   "Nxd3+"
+  ],
+  "rating": 1386
+ },
+ {
+  "id": "RPIVR",
+  "fen": "r5k1/5pp1/6Bp/1PQ5/2P5/1q1bP1BP/5PP1/3R2K1 b - - 0 27",
+  "answer": "b3d1",
+  "line": [
+   "Qxd1+",
+   "Kh2",
+   "Bxg6"
+  ],
+  "rating": 1389
+ },
+ {
+  "id": "HMKhx",
+  "fen": "3q1rk1/2r2pp1/p3pn1p/Q6b/4P3/P2P1N1P/1P2BPP1/2R1R1K1 b - - 0 22",
+  "answer": "c7c1",
+  "line": [
+   "Rxc1",
+   "Qxd8",
+   "Rxe1+",
+   "Nxe1",
+   "Rxd8"
+  ],
+  "rating": 1390
+ },
+ {
+  "id": "8XT1c",
+  "fen": "2r1k3/pp3p2/2b2p1p/3Qr3/8/P1R2PP1/1PP4P/2K1R3 b - - 0 25",
+  "answer": "e5e1",
+  "line": [
+   "Rxe1+",
+   "Kd2",
+   "Bxd5",
+   "Rxc8+",
+   "Kd7"
+  ],
+  "rating": 1395
+ },
+ {
+  "id": "D4sEF",
+  "fen": "r3kb1r/2p2pp1/p1p2n1p/8/2P1N1b1/5N2/PP3PPP/R1BqR1K1 w kq - 0 14",
+  "answer": "e4f6",
+  "line": [
+   "Nxf6+",
+   "Kd8",
+   "Rxd1+"
+  ],
+  "rating": 1400
+ },
+ {
+  "id": "0pX30",
+  "fen": "r1q2rk1/1pN3pp/1pnpb1n1/4p3/2P1PpB1/3P3P/PP3PPN/R2Q1RK1 b - - 0 14",
+  "answer": "e6g4",
+  "line": [
+   "Bxg4",
+   "Qxg4",
+   "Qxc7"
+  ],
+  "rating": 1405
+ },
+ {
+  "id": "xd5Iz",
+  "fen": "5r2/ppk3pp/2pr4/3n4/6Q1/4P3/PP4PP/RN3RK1 b - - 0 21",
+  "answer": "f8f1",
+  "line": [
+   "Rxf1+",
+   "Kxf1",
+   "Nxe3+",
+   "Kg1",
+   "Nxg4"
+  ],
+  "rating": 1409
+ },
+ {
+  "id": "04BBn",
+  "fen": "r5r1/1p1k1p2/p3b3/3Bb3/8/P2Q3q/1P3PP1/R4RK1 w - - 0 25",
+  "answer": "d5e6",
+  "line": [
+   "Bxe6+",
+   "Kxe6",
+   "Qxh3+"
+  ],
+  "rating": 1411
+ },
+ {
+  "id": "ibDER",
+  "fen": "2r4k/p3qp1P/3Q4/1p6/1Pr3P1/P4P2/1P6/1K1R3R b - - 0 29",
+  "answer": "c4c1",
+  "line": [
+   "Rc1+",
+   "Ka2",
+   "Qxd6",
+   "Rxd6",
+   "Rxh1"
+  ],
+  "rating": 1414
+ },
+ {
+  "id": "JRGY3",
+  "fen": "2k5/pp5p/1p6/R7/6p1/2P2nP1/5PKP/4R3 b - - 0 27",
+  "answer": "f3e1",
+  "line": [
+   "Nxe1+",
+   "Kf1",
+   "bxa5"
+  ],
+  "rating": 1420
+ },
+ {
+  "id": "4eIfy",
+  "fen": "rn3rk1/ppq1b1pp/3p4/2p2b2/2P5/5N1B/PP3P1P/RN1QK2R w KQ - 0 13",
+  "answer": "d1d5",
+  "line": [
+   "Qd5+",
+   "Kh8",
+   "Bxf5"
+  ],
+  "rating": 1431
+ },
+ {
+  "id": "DqeYy",
+  "fen": "2k5/pp3p2/4pQp1/3p3r/2qP4/2P5/PP4KN/R1B5 b - - 0 26",
+  "answer": "c4e2",
+  "line": [
+   "Qe2+",
+   "Qf2",
+   "Rxh2+",
+   "Kxh2",
+   "Qxf2+"
+  ],
+  "rating": 1432
+ },
+ {
+  "id": "SE1ut",
+  "fen": "5rk1/4bp2/4p2Q/2Ppn2P/1R6/5N2/1q3PP1/5RK1 b - - 0 30",
+  "answer": "e5f3",
+  "line": [
+   "Nxf3+",
+   "gxf3",
+   "Qxb4"
+  ],
+  "rating": 1438
+ },
+ {
+  "id": "IaxRU",
+  "fen": "7r/pbpp1k2/1pn2pp1/2P2p2/1P1P1P2/P4PpQ/3N1R1P/4R1K1 b - - 0 24",
+  "answer": "g3f2",
+  "line": [
+   "gxf2+",
+   "Kxf2",
+   "Rxh3"
+  ],
+  "rating": 1439
+ },
+ {
+  "id": "blfOI",
+  "fen": "4R3/5k2/q1p3pQ/p2p1p1p/8/P6P/1rP3P1/5R1K b - - 0 27",
+  "answer": "a6f1",
+  "line": [
+   "Qxf1+",
+   "Kh2",
+   "Kxe8"
+  ],
+  "rating": 1456
+ },
+ {
+  "id": "FEEuj",
+  "fen": "r5k1/p1p2pp1/2p3q1/6p1/3Pr3/P1PQ3P/5PP1/4RRK1 b - - 1 21",
+  "answer": "e4e1",
+  "line": [
+   "Rxe1",
+   "Qxg6",
+   "Rxf1+",
+   "Kxf1",
+   "fxg6"
+  ],
+  "rating": 1461
+ },
+ {
+  "id": "n0cbR",
+  "fen": "2R2rk1/pp3pbp/4p1p1/q2n2B1/3PN3/1B3Q1P/Pn3PP1/4R1K1 b - - 0 18",
+  "answer": "a5e1",
+  "line": [
+   "Qxe1+",
+   "Kh2",
+   "Rxc8"
+  ],
+  "rating": 1463
+ },
+ {
+  "id": "IyyIO",
+  "fen": "3r1nk1/pp3pp1/8/3qPP2/2r2BP1/2P2Q2/PP6/R4R1K b - - 4 24",
+  "answer": "c4f4",
+  "line": [
+   "Rxf4",
+   "Qxd5",
+   "Rxf1+",
+   "Rxf1",
+   "Rxd5"
+  ],
+  "rating": 1464
+ },
+ {
+  "id": "V4d4P",
+  "fen": "4r2k/pp5p/5p2/2pr4/1q1n1Q2/8/P5PP/4R2K w - - 0 29",
+  "answer": "f4f6",
+  "line": [
+   "Qxf6+",
+   "Kg8",
+   "Rxe8#"
+  ],
+  "rating": 1484
+ },
+ {
+  "id": "2pNHZ",
+  "fen": "1r4k1/5pp1/4p3/5q2/3P4/2P1B1Qp/P4P1K/6r1 w - - 0 33",
+  "answer": "g3b8",
+  "line": [
+   "Qxb8+",
+   "Kh7",
+   "Kxg1"
+  ],
+  "rating": 1494
+ },
+ {
+  "id": "dlHks",
+  "fen": "6k1/5p2/8/1R1p4/3P4/1Pn1PrP1/6P1/4K3 w - - 0 38",
+  "answer": "b5b8",
+  "line": [
+   "Rb8+",
+   "Kh7",
+   "gxf3"
+  ],
+  "rating": 1497
+ },
+ {
+  "id": "GT4X1",
+  "fen": "1rr3k1/pR3ppp/5n2/3pq3/8/1P1B1P2/P2Q2PP/1NR3K1 b - - 0 21",
+  "answer": "c8c1",
+  "line": [
+   "Rxc1+",
+   "Qxc1",
+   "Rxb7"
+  ],
+  "rating": 1502
+ },
+ {
+  "id": "vwHr6",
+  "fen": "r4rk1/pp3pp1/2pp4/3N3q/4P3/8/PPP3P1/1K5R w - - 0 21",
+  "answer": "d5e7",
+  "line": [
+   "Ne7+",
+   "Kh7",
+   "Rxh5#"
+  ],
+  "rating": 1521
+ },
+ {
+  "id": "hfhWH",
+  "fen": "r4rk1/pp1n2pp/P1p5/R4B2/3P4/1q3P2/1P1Q1P1P/6RK b - - 0 21",
+  "answer": "b3f3",
+  "line": [
+   "Qxf3+",
+   "Rg2",
+   "Rxf5"
+  ],
+  "rating": 1533
+ },
+ {
+  "id": "lcQfz",
+  "fen": "6k1/r3Rpp1/2P4p/5Q2/4p3/4P1P1/1p3PP1/6K1 b - - 0 36",
+  "answer": "b2b1q",
+  "line": [
+   "b1=Q+",
+   "Kh2",
+   "Rxe7"
+  ],
+  "rating": 1543
+ },
+ {
+  "id": "lDWH9",
+  "fen": "5rk1/5pb1/B1p4p/2p5/8/5q1P/PQ4P1/R5K1 w - - 0 27",
+  "answer": "b2g7",
+  "line": [
+   "Qxg7+",
+   "Kxg7",
+   "gxf3"
+  ],
+  "rating": 1546
+ },
+ {
+  "id": "ZkxGR",
+  "fen": "5r1k/ppp5/3p2Pb/4pQ2/2P5/1P2BnR1/P4P2/2K5 b - - 0 28",
+  "answer": "h6e3",
+  "line": [
+   "Bxe3+",
+   "fxe3",
+   "Rxf5",
+   "g7+",
+   "Kg8"
+  ],
+  "rating": 1587
+ },
+ {
+  "id": "KX0Ve",
+  "fen": "r1bqk2r/pp1pppbp/2n3p1/8/3Nn3/6N1/PPP2PPP/R1BQKB1R w KQkq - 0 8",
+  "answer": "d4c6",
+  "line": [
+   "Nxc6",
+   "bxc6",
+   "Nxe4"
+  ],
+  "rating": 1592
+ },
+ {
+  "id": "Az2NM",
+  "fen": "N4rk1/4qppp/1p1p4/p2P4/1P2Pn2/P2P3P/1B3P2/R2Q1RK1 b - - 0 19",
+  "answer": "e7g5",
+  "line": [
+   "Qg5+",
+   "Qg4",
+   "Nxh3+",
+   "Kh1",
+   "Qxg4"
+  ],
+  "rating": 1594
+ },
+ {
+  "id": "veZXf",
+  "fen": "r2q1rk1/pp1nbppp/6N1/3Pp3/6P1/2n4P/PP2B3/R1BQK2R w KQ - 0 15",
+  "answer": "g6e7",
+  "line": [
+   "Nxe7+",
+   "Qxe7",
+   "bxc3"
+  ],
+  "rating": 1648
+ },
+ {
+  "id": "Uhojn",
+  "fen": "6k1/ppp2p2/3p3p/3P3P/6p1/4q2P/PP2r2Q/5RRK b - - 0 43",
+  "answer": "e2h2",
+  "line": [
+   "Rxh2+",
+   "Kxh2",
+   "Qxh3#"
+  ],
+  "rating": 1649
+ },
+ {
+  "id": "y5CFL",
+  "fen": "3rr1k1/pp3ppp/2n2n2/8/6b1/2b1B1P1/PPP1NPBP/R2R2K1 w - - 0 14",
+  "answer": "d1d8",
+  "line": [
+   "Rxd8",
+   "Rxd8",
+   "Nxc3"
+  ],
+  "rating": 1657
+ },
+ {
+  "id": "xrHJJ",
+  "fen": "r2q1rk1/2pn1p2/3pb2p/p3pN2/1p2P3/1P1PP2P/1PP3P1/R2Q1RK1 w - - 0 18",
+  "answer": "d1g4",
+  "line": [
+   "Qg4+",
+   "Qg5",
+   "Nxh6+",
+   "Kh7",
+   "Qxg5"
+  ],
+  "rating": 1672
+ }
+]

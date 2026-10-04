@@ -60,6 +60,9 @@ export function validateExercise(ex: Exercise, where: string): string[] {
         if (isSandbox(ex.fen)) errs.push(`${at}: "${ex.goal}" needs both kings on the board`);
       }
       if (ex.goal === "escape" && !load(ex.fen).inCheck()) errs.push(`${at}: "escape" but the side to move isn't in check`);
+      if (ex.goal === "best" && isSandbox(ex.fen)) errs.push(`${at}: "best" needs both kings on the board`);
+      if ((ex.margin !== undefined || ex.keeps) && ex.goal !== "best") errs.push(`${at}: margin/keeps only apply to goal "best"`);
+      if (ex.margin !== undefined && ex.keeps) errs.push(`${at}: use margin or keeps, not both`);
       const legal = movesMeeting(ex.fen, "any");
       const meeting = ex.goal === "win" ? winningMoves(ex.fen) : movesMeeting(ex.fen, ex.goal);
       // A promotion is four moves (=Q, =R, =B, =N); the app always promotes to a
@@ -70,8 +73,9 @@ export function validateExercise(ex: Exercise, where: string): string[] {
         else if (!meeting.some((m) => same(m, a))) errs.push(`${at}: ${a} does not meet goal "${ex.goal}"`);
       }
       // The key must be complete, or a kid who finds another correct move gets
-      // marked wrong (and so does the worksheet). Mate is never strict.
-      if (ex.goal !== "any" && (!ex.strict || ex.goal === "mate")) {
+      // marked wrong (and so does the worksheet). Mate is never strict. "best"
+      // keys are checked against Stockfish by npm run validate instead.
+      if (ex.goal !== "any" && ex.goal !== "best" && (!ex.strict || ex.goal === "mate")) {
         const missing = [...new Set(meeting.filter((m) => !ex.answers.some((a) => same(m, a))).map((m) => m.slice(0, 4)))];
         if (missing.length) errs.push(`${at}: answer key is missing ${ex.goal} move(s) ${missing.join(", ")}`);
       }

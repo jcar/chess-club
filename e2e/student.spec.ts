@@ -107,3 +107,24 @@ test("a 6th grader starting fresh gets Step 1, and easy reading is their choice"
   await page.reload();
   await expect(page.getByTestId("easy-reading")).toBeChecked(); // saved to Sam, not lost
 });
+
+test("Step 7–8 'best' moves: a plan move is graded, and a weaker one gets a gentle nudge", async ({ page }) => {
+  await page.goto("./student/lesson/s7-center/");
+  await page.getByTestId("start").click();
+  await tapSquare(page, "e4"); // p1: tap a center square
+  await expect(page.getByTestId("feedback-right")).toBeVisible();
+  await page.getByTestId("next").click();
+  await tapSquare(page, "a2"); // p2: a2-a3 is legal but not the plan
+  await tapSquare(page, "a3");
+  await expect(page.getByTestId("feedback-wrong")).toContainText("not the move we're looking for");
+  await page.getByRole("button", { name: "Try again" }).click();
+  await tapSquare(page, "e2");
+  await tapSquare(page, "e4");
+  await expect(page.getByTestId("feedback-right")).toBeVisible();
+
+  await page.goto("./student/lesson/s8-opposition/");
+  await page.getByTestId("start").click();
+  await tapSquare(page, "e3"); // p1: the king leads the pawn
+  await tapSquare(page, "e4");
+  await expect(page.getByTestId("feedback-right")).toBeVisible();
+});

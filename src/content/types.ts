@@ -38,8 +38,12 @@ export interface StarsExercise extends ExerciseBase {
   stars: Square[];
 }
 
-/** "win": the move wins at least a minor piece against best defence (verified by lib/chess/tactics). */
-export type MoveGoal = "capture" | "check" | "mate" | "escape" | "win" | "any";
+/**
+ * "win": the move wins at least a minor piece against best defence (verified by lib/chess/tactics).
+ * "best": the strongest move(s) by Stockfish, for quiet moves in openings,
+ * endgames and strategy. Checked by `npm run validate` (scripts/lib/engineCheck.ts).
+ */
+export type MoveGoal = "capture" | "check" | "mate" | "escape" | "win" | "best" | "any";
 
 /**
  * Play one move. `answers` lists every accepted move. The validator proves each
@@ -56,6 +60,16 @@ export interface MoveExercise extends ExerciseBase {
    * requires every capture/check/mate to be accepted.
    */
   strict?: boolean;
+  /**
+   * "best" only: the key must be exactly the moves within `margin` centipawns
+   * of the engine's top move (default 50).
+   */
+  margin?: number;
+  /**
+   * "best" only, for endgames: the key must be exactly the moves that keep a
+   * won position won, or a drawn position drawn. Replaces `margin`.
+   */
+  keeps?: "win" | "draw";
 }
 
 /** Tap one of the answer squares (e.g. "Tap e4", "Where does the queen start?"). */
@@ -112,6 +126,21 @@ export interface MiniGame {
   youPlay: "white" | "black";
 }
 
+/** Lichess puzzle themes we ship as extra practice (see content/puzzles.ts). */
+export type PuzzleTheme =
+  | "mateIn1"
+  | "hangingPiece"
+  | "fork"
+  | "pin"
+  | "skewer"
+  | "opening"
+  | "discoveredAttack"
+  | "capturingDefender"
+  | "deflection"
+  | "intermezzo"
+  | "pawnEndgame"
+  | "rookEndgame";
+
 export interface Lesson {
   id: string; // unique across the curriculum, e.g. "s1-rook"
   step: number;
@@ -135,7 +164,12 @@ export interface Lesson {
   /** Where the author took the teaching order from (titles/chapters only, never text). */
   sources: string[];
   /** Extra practice drawn from the Lichess puzzle set for this theme (see content/puzzles.ts). */
-  extra?: "mateIn1" | "hangingPiece" | "fork" | "pin" | "skewer";
+  extra?: PuzzleTheme;
+  /**
+   * Opening to practise at home in OpeningLab (sibling site), e.g. "Italian Game".
+   * Shown to the teacher only; student mode has no outside links.
+   */
+  openingLab?: string;
 }
 
 export interface Step {

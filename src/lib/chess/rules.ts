@@ -72,7 +72,10 @@ export function play(fen: string, from: Square, to: Square, opts: { keepTurn?: b
   return { fen: after, uci: uciOf(m), san: m.san, captured: Boolean(m.captured), check, mate };
 }
 
-/** Every legal move for the side to move that meets the goal. */
+/**
+ * Every legal move for the side to move that meets the goal. "best" and "any"
+ * return every legal move ("best" is judged by the engine, at validate time).
+ */
 export function movesMeeting(fen: string, goal: MoveGoal): Uci[] {
   const g = load(fen);
   const out: Uci[] = [];

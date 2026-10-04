@@ -29,9 +29,9 @@ device, and it works offline after the first visit.
 | 4 | Special Rules & Draws | ✅ 4 lessons |
 | 5 | Finish the Game | ✅ 3 lessons |
 | 6 | Tactics I + CCA | ✅ 4 lessons |
-| 7 | Starting Well | planned |
-| 8 | Club Player | planned |
-| 9 | Advanced Track | planned |
+| 7 | Starting Well | ✅ 7 lessons |
+| 8 | Club Player | ✅ 8 lessons |
+| 9 | Advanced Track | ✅ 6 lessons |
 
 The topic order draws on well-known beginner books (see `references/README.md`);
 all lesson text is original.
@@ -41,7 +41,7 @@ all lesson text is original.
 ```bash
 npm install
 npm run dev          # http://localhost:3000
-npm run validate     # checks every exercise against the rules of chess
+npm run validate     # checks every exercise against the rules of chess (and Stockfish)
 npm test             # unit tests
 npm run test:e2e     # Playwright: desktop, iPad (both orientations), iPhone
 npm run test:e2e:pages  # same, served under /chess-club/ like GitHub Pages
@@ -56,3 +56,6 @@ publishes it to GitHub Pages (Settings → Pages → Source: GitHub Actions).
 
 Add it to `src/content/lessons/step-N.ts` (see `src/content/types.ts`), build
 positions with `board({...})` or `after("e4 e5")`, and run `npm run validate`.
+For quiet moves (openings, endgames, strategy) use the `"best"` goal: `npm run
+analyze -- "e4 e5 Nf3"` (or a FEN) lists every move with its Stockfish score, so
+you can pick positions with a clear answer.
