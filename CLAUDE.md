@@ -51,7 +51,21 @@ design is in `~/.claude/plans/i-want-to-build-unified-newell.md`. Sibling projec
   (300 MB, gitignored; download command is in `scripts/build-puzzles.ts`). A lesson's
   `extra` theme adds them as extra practice (iPad button + worksheet sets of 8).
 - `src/lib/passcode.ts`: `S<step>-L<lesson>-<checksum>` codes carry passes from
-  an anonymous iPad (or paper) to the teacher's roster.
+  an anonymous iPad (or paper) to the teacher's roster (typed fallback).
+- **Shared, stateless iPads** (kids may get a different iPad each week):
+  `src/lib/station.ts` packs today's lesson, lock, easy reading and the group's
+  kids (id, name, animal) into `/student/go/#s=…`, printed as a QR station card
+  (`components/ui/Qr.tsx`, `lib/club/stations.ts`). Opening it wipes leftovers
+  (`whoStore`, `myStore`) and sets `stationStore` (ignored after that date);
+  `StudentLesson` then asks "Who's playing?" every lesson and ends with "Next kid".
+- `src/lib/transfer.ts`: results to the club keeper with no server. A pass QR
+  (`#q=…` on `/teach/wrapup/`) or a helper's batch QR; `applyTransfer` in
+  `model.ts`. Wrap-up scans with the in-page camera (`components/teach/Scanner.tsx`,
+  jsQR lazy-loaded) so results land in the app's own storage even from the Home Screen.
+- Kids have an `animal` emoji (`fillAnimals` on load) so non-readers can find
+  their name. Planner inputs are saved per date in `lib/club/planStore.ts`
+  (expected kids, adults, minutes 30–90, iPads, whole early-reader group,
+  overrides, warm-up from `content/warmups.ts`); `computePlan` rebuilds the plan.
 - `src/lib/chess/minibot.ts`: rule-based bot for the mini-games (pawn races, piece
   vs. pawns, and a lone king that runs for the centre in the Step 4–5 mating games).
   `outcome()` handles promote / captureAll / mate (stalemate = draw).

@@ -1,10 +1,10 @@
 "use client";
 
 import { createLocalStore, useLocalStore } from "@/lib/store";
-import { EMPTY_CLUB, type Club } from "./model";
+import { EMPTY_CLUB, fillAnimals, type Club } from "./model";
 
 /** The club lives only in this browser. Export/import moves it between devices. */
-export const clubStore = createLocalStore<Club>("chessclub:club", EMPTY_CLUB);
+export const clubStore = createLocalStore<Club>("chessclub:club", EMPTY_CLUB, (raw) => fillAnimals({ ...EMPTY_CLUB, ...(raw as Partial<Club>) }));
 
 export function useClub(): Club {
   return useLocalStore(clubStore);

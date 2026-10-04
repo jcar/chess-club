@@ -143,7 +143,14 @@ export function Devices() {
               <span>
                 Locked to <b>{ALL_LESSONS.find((l) => l.id === settings.lockedLesson)?.title}</b>.
               </span>
-              <Button tone="soft" onClick={() => settingsStore.update((s) => ({ ...s, lockedLesson: null }))}>
+              <Button
+                tone="soft"
+                onClick={() => {
+                  // A kid can reach this page with Safari's back button, so the PIN guards it here too.
+                  if (settings.pin && prompt("Teacher PIN") !== settings.pin) return;
+                  settingsStore.update((s) => ({ ...s, lockedLesson: null }));
+                }}
+              >
                 Unlock
               </Button>
             </div>

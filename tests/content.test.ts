@@ -5,10 +5,13 @@ import { answerFor } from "@/lib/exercise/answers";
 import { board } from "@/content/authoring";
 
 describe("curriculum", () => {
-  // Slow: "win" exercises run a small material search.
-  it("every lesson passes validation", () => {
-    for (const l of ALL_LESSONS) expect(validateLesson(l), l.id).toEqual([]);
-  }, 120_000);
+  // Slow: "win" exercises run a small material search. One test per lesson,
+  // each yielding first, keeps the worker responsive.
+  it.each(ALL_LESSONS.map((l) => [l.id, l] as const))("%s passes validation", async (_id, l) => {
+    // Let the worker answer vitest's messages between long synchronous searches.
+    await new Promise((r) => setTimeout(r, 0));
+    expect(validateLesson(l)).toEqual([]);
+  }, 60_000);
 
   it("lesson ids are unique and steps are numbered 1..9", () => {
     expect(new Set(ALL_LESSONS.map((l) => l.id)).size).toBe(ALL_LESSONS.length);

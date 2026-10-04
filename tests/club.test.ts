@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { EMPTY_CLUB, addKid, currentStep, mergeClub, parseClub, recordPass, type Club } from "@/lib/club/model";
+import { EMPTY_CLUB, addKid, applyTransfer, currentStep, fillAnimals, mergeClub, parseClub, recordPass, type Club } from "@/lib/club/model";
 import { parseRosterFragment, rosterFragment } from "@/lib/club/share";
 import { STEPS } from "@/content/curriculum";
 
@@ -81,5 +81,60 @@ describe("easy reading", async () => {
     c.kids[0].earlyReader = true;
     const back = parseRosterFragment("#" + rosterFragment(c))!;
     expect(back.kids.map((k) => k.earlyReader)).toEqual([true, undefined]);
+  });
+});
+
+describe("animals", () => {
+  it("every new kid gets a different animal, and old files get filled in", () => {
+    let c: Club = { ...EMPTY_CLUB };
+    for (const n of ["Ana", "Ben", "Cy"]) c = addKid(c, n);
+    expect(new Set(c.kids.map((k) => k.animal)).size).toBe(3);
+    const old = { ...c, kids: c.kids.map((k) => ({ ...k, animal: undefined })) };
+    const filled = fillAnimals(old);
+    expect(filled.kids.every((k) => k.animal)).toBe(true);
+    expect(new Set(filled.kids.map((k) => k.animal)).size).toBe(3);
+  });
+  it("the roster link carries animals", () => {
+    const c = addKid({ ...EMPTY_CLUB }, "Ana");
+    expect(parseRosterFragment("#" + rosterFragment(c))!.kids[0].animal).toBe(c.kids[0].animal);
+  });
+});
+
+describe("merging kids who share a first name", () => {
+  it("keeps two different Mayas apart, but still matches a lone Maya by name", () => {
+    let a: Club = addKid({ ...EMPTY_CLUB }, "Maya");
+    let b: Club = addKid({ ...EMPTY_CLUB }, "Maya");
+    b = addKid(b, "Maya");
+    // Two incoming Mayas: we can't tell which (if either) is ours, so all three stay.
+    expect(mergeClub(a, b).club.kids).toHaveLength(3);
+    a = addKid({ ...EMPTY_CLUB }, "Leo");
+    const other = addKid({ ...EMPTY_CLUB }, "leo ");
+    expect(mergeClub(a, other).club.kids).toHaveLength(1);
+  });
+});
+
+describe("applyTransfer", () => {
+  it("records a scanned pass and marks the kid present", () => {
+    const c = addKid({ ...EMPTY_CLUB }, "Ana");
+    const id = c.kids[0].id;
+    const { club, applied } = applyTransfer(c, { kind: "pass", date: "2026-10-08", lesson: L1, kidId: id });
+    expect(club.passes[id][L1]).toEqual({ date: "2026-10-08", via: "ipad" });
+    expect(club.attendance["2026-10-08"]).toEqual([id]);
+    expect(applied).toEqual({ passes: 1, present: 1 });
+  });
+  it("applies a helper batch, skipping unknown kids, and is idempotent", () => {
+    let c = addKid({ ...EMPTY_CLUB }, "Ana");
+    c = addKid(c, "Ben");
+    const [a, b] = c.kids.map((k) => k.id);
+    const t = { kind: "batch" as const, date: "2026-10-08", present: [a, b, "nobody"], passes: [[a, L1], [b, L2], ["nobody", L1]] as [string, string][] };
+    const once = applyTransfer(c, t);
+    expect(once.applied).toEqual({ passes: 2, present: 2 });
+    expect(applyTransfer(once.club, t).applied).toEqual({ passes: 0, present: 0 });
+  });
+  it("an anonymous pass needs the adult to pick the kid", () => {
+    const c = addKid({ ...EMPTY_CLUB }, "Ana");
+    const t = { kind: "pass" as const, date: "2026-10-08", lesson: L1 };
+    expect(applyTransfer(c, t).applied.passes).toBe(0);
+    expect(applyTransfer(c, t, c.kids[0].id).applied.passes).toBe(1);
   });
 });

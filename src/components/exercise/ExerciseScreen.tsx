@@ -4,13 +4,18 @@
 // retry with hints and a "show me"; check mode (the pass check) takes the
 // first answer. The parent must key this component by exercise id so state
 // resets between exercises.
+//
+// Easy reading is built for kids who can't read yet: the question AND every
+// answer (with a colour name) and hint are read aloud, the board stays live
+// after a miss (no "Try again" button to read), and targets like "3 moves"
+// or "10 squares" are shown as pictures.
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ChoiceExercise, Exercise, MoveExercise, ReachExercise, Square, StarsExercise, TapExercise, Words } from "@/content/types";
 import { Board } from "@/components/board/Board";
 import { answerFor } from "@/lib/exercise/answers";
 import { destinations, load, matchesAnswer, play, turnOf } from "@/lib/chess/rules";
-import { speak } from "@/lib/speech";
+import { speak, speakLines } from "@/lib/speech";
 
 export type Mode = "practice" | "check";
 
@@ -30,6 +35,25 @@ export function words(w: Words | undefined, young: boolean): string {
   return young ? (w.kid ?? w.text) : w.text;
 }
 
+/** Colour markers for answer buttons, so a non-reader can hear "Blue: Diagonal" and find it. */
+export const MARKERS = [
+  { e: "🔴", name: "Red" },
+  { e: "🔵", name: "Blue" },
+  { e: "🟢", name: "Green" },
+  { e: "🟡", name: "Yellow" },
+];
+
+/** What to say for an exercise: the question, then (for choices) each answer with its colour. */
+function spoken(ex: Exercise, young: boolean): string[] {
+  const lines = [words(ex.prompt, young)];
+  if (ex.kind === "choice") ex.options.forEach((o, i) => lines.push(`${MARKERS[i]?.name ?? i + 1}: ${words(o, young)}`));
+  if (young && ex.kind === "stars") {
+    const n = (answerFor(ex) as { moves: number }).moves;
+    lines.push(`Use ${n} move${n === 1 ? "" : "s"}.`);
+  }
+  return lines;
+}
+
 export function ExerciseScreen({ ex, mode, young, readAloud, onNext }: Props) {
   const prompt = words(ex.prompt, young);
   const [status, setStatus] = useState<Status>({ state: "playing" });
@@ -37,9 +61,10 @@ export function ExerciseScreen({ ex, mode, young, readAloud, onNext }: Props) {
   const [showHint, setShowHint] = useState(false);
   const [revealed, setRevealed] = useState(false);
 
+  const say = useMemo(() => spoken(ex, young), [ex, young]);
   useEffect(() => {
-    if (readAloud && young) speak(prompt);
-  }, [prompt, readAloud, young]);
+    if (readAloud && young) speakLines(say);
+  }, [say, readAloud, young]);
 
   const right = useCallback(
     (note?: string) => {
@@ -54,13 +79,14 @@ export function ExerciseScreen({ ex, mode, young, readAloud, onNext }: Props) {
       setMisses((m) => m + 1);
       setShowHint(true);
       setStatus({ state: "wrong", note, final });
-      if (readAloud && young) speak(note);
+      if (readAloud && young) speakLines(final ? [note] : [note, words(ex.hint, true)]);
     },
-    [mode, readAloud, young],
+    [mode, readAloud, young, ex.hint],
   );
-  const retry = () => setStatus({ state: "playing" });
 
   const done = status.state === "right" || (status.state === "wrong" && status.final) || revealed;
+  // After a practice miss the board stays live: the next try just starts.
+  const live = !done && (status.state === "playing" || status.state === "wrong");
   const firstTry = status.state === "right" && status.firstTry;
 
   return (
@@ -71,15 +97,15 @@ export function ExerciseScreen({ ex, mode, young, readAloud, onNext }: Props) {
         </p>
         <button
           type="button"
-          onClick={() => speak(prompt)}
-          className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-card text-2xl shadow ring-1 ring-line"
+          onClick={() => speakLines(say)}
+          className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-card text-3xl shadow ring-1 ring-line"
           aria-label="Read it to me"
         >
           🔊
         </button>
       </div>
 
-      <Body ex={ex} young={young} status={status} revealed={revealed} onRight={right} onWrong={wrong} />
+      <Body ex={ex} young={young} status={status} live={live} revealed={revealed} onRight={right} onWrong={wrong} />
 
       <div className="flex min-h-16 w-full max-w-3xl flex-wrap items-center justify-center gap-3" aria-live="polite">
         {status.state === "right" && (
@@ -96,11 +122,6 @@ export function ExerciseScreen({ ex, mode, young, readAloud, onNext }: Props) {
       </div>
 
       <div className="flex flex-wrap justify-center gap-3">
-        {status.state === "wrong" && !status.final && !revealed && (
-          <BigButton onClick={retry} tone="soft">
-            Try again
-          </BigButton>
-        )}
         {mode === "practice" && misses >= 2 && !done && (
           <BigButton onClick={() => setRevealed(true)} tone="soft">
             Show me
@@ -135,6 +156,8 @@ export function BigButton({ children, onClick, tone = "primary", testId, disable
 interface BodyProps {
   young: boolean;
   status: Status;
+  /** Taps count (playing, or retrying after a practice miss). */
+  live: boolean;
   revealed: boolean;
   onRight: (note?: string) => void;
   onWrong: (note: string) => void;
@@ -156,11 +179,11 @@ function Body(props: BodyProps & { ex: Exercise }) {
   }
 }
 
-function Reach({ ex, status, revealed, young, onRight, onWrong }: BodyProps & { ex: ReachExercise }) {
+function Reach({ ex, status, live, revealed, young, onRight, onWrong }: BodyProps & { ex: ReachExercise }) {
   const answer = useMemo(() => new Set(destinations(ex.fen, ex.square)), [ex]);
   const [picked, setPicked] = useState<Set<Square>>(new Set());
-  const playing = status.state === "playing" && !revealed;
-  const judged = status.state !== "playing" || revealed;
+  const playing = live;
+  const judged = !live;
 
   const toggle = (sq: Square) => {
     if (!playing || sq === ex.square) return;
@@ -197,6 +220,11 @@ function Reach({ ex, status, revealed, young, onRight, onWrong }: BodyProps & { 
         goodSquares={judged ? (revealed || status.state === "right" || (status.state === "wrong" && status.final) ? [...answer] : pickedList.filter((s) => answer.has(s))) : []}
         badSquares={[]}
       />
+      {playing && young && (
+        <p className="text-2xl font-semibold" data-testid="reach-target">
+          🎯 Find {answer.size} squares · picked {picked.size}
+        </p>
+      )}
       {playing && (
         <BigButton onClick={check} disabled={picked.size === 0} testId="check">
           ✓ Done
@@ -206,10 +234,11 @@ function Reach({ ex, status, revealed, young, onRight, onWrong }: BodyProps & { 
   );
 }
 
-function Stars({ ex, status, revealed, young, onRight, onWrong }: BodyProps & { ex: StarsExercise }) {
+function Stars({ ex, status, live, revealed, young, onRight, onWrong }: BodyProps & { ex: StarsExercise }) {
   const fewest = (answerFor(ex) as { moves: number }).moves;
   const [pos, setPos] = useState({ fen: ex.fen, at: ex.square, got: [] as Square[], moves: 0 });
-  const playing = status.state === "playing" && !revealed;
+  const finished = pos.got.length === ex.stars.length;
+  const playing = live && !finished;
   const left = ex.stars.filter((s) => !pos.got.includes(s));
 
   const getMoves = useCallback((sq: Square) => (playing && sq === pos.at ? destinations(pos.fen, pos.at) : []), [playing, pos]);
@@ -226,12 +255,12 @@ function Stars({ ex, status, revealed, young, onRight, onWrong }: BodyProps & { 
   };
   const reset = () => setPos({ fen: ex.fen, at: ex.square, got: [], moves: 0 });
 
-  // "Try again" (status back to playing) should also put the piece back.
-  const [lastStatus, setLastStatus] = useState(status.state);
-  if (lastStatus !== status.state) {
-    setLastStatus(status.state);
-    if (status.state === "playing") reset();
-  }
+  // A practice miss (too many moves): put the piece back for another go.
+  useEffect(() => {
+    if (status.state !== "wrong" || status.final) return;
+    const t = setTimeout(() => setPos({ fen: ex.fen, at: ex.square, got: [], moves: 0 }), 1200);
+    return () => clearTimeout(t);
+  }, [status, ex.fen, ex.square]);
 
   return (
     <>
@@ -239,10 +268,15 @@ function Stars({ ex, status, revealed, young, onRight, onWrong }: BodyProps & { 
       <div className="flex items-center gap-4 text-xl">
         <span data-testid="move-count">
           Moves: <b>{pos.moves}</b>
+          {young && (
+            <span className="ml-2" aria-label={`Use ${fewest} moves`}>
+              (🐾 {fewest})
+            </span>
+          )}
         </span>
         {revealed && <span className="font-semibold text-good">It can be done in {fewest}.</span>}
         {playing && pos.moves > 0 && (
-          <button type="button" onClick={reset} className="rounded-xl bg-card px-4 py-2 ring-2 ring-line">
+          <button type="button" onClick={reset} className="min-h-16 rounded-2xl bg-card px-5 text-xl ring-2 ring-line">
             ↺ Start over
           </button>
         )}
@@ -251,9 +285,9 @@ function Stars({ ex, status, revealed, young, onRight, onWrong }: BodyProps & { 
   );
 }
 
-function MoveIt({ ex, status, revealed, young, onRight, onWrong }: BodyProps & { ex: MoveExercise }) {
+function MoveIt({ ex, status, live, revealed, young, onRight, onWrong }: BodyProps & { ex: MoveExercise }) {
   const [shown, setShown] = useState<{ fen: string; last?: { from: Square; to: Square }; bad?: Square }>({ fen: ex.fen });
-  const playing = status.state === "playing" && !revealed;
+  const playing = live;
   const turn = turnOf(ex.fen);
 
   const getMoves = useCallback(
@@ -295,10 +329,10 @@ function MoveIt({ ex, status, revealed, young, onRight, onWrong }: BodyProps & {
   );
 }
 
-function Tap({ ex, status, revealed, young, onRight, onWrong }: BodyProps & { ex: TapExercise }) {
+function Tap({ ex, status, live, revealed, young, onRight, onWrong }: BodyProps & { ex: TapExercise }) {
   const [bad, setBad] = useState<Square | null>(null);
   const [good, setGood] = useState<Square | null>(null);
-  const playing = status.state === "playing" && !revealed;
+  const playing = live;
   const onTap = (sq: Square) => {
     if (!playing) return;
     if (ex.answers.includes(sq)) {
@@ -324,9 +358,9 @@ function Tap({ ex, status, revealed, young, onRight, onWrong }: BodyProps & { ex
   );
 }
 
-function Choice({ ex, status, revealed, young, onRight, onWrong }: BodyProps & { ex: ChoiceExercise }) {
+function Choice({ ex, status, live, revealed, young, onRight, onWrong }: BodyProps & { ex: ChoiceExercise }) {
   const [picked, setPicked] = useState<number | null>(null);
-  const playing = status.state === "playing" && !revealed;
+  const playing = live;
   const pick = (i: number) => {
     if (!playing) return;
     setPicked(i);
@@ -341,18 +375,35 @@ function Choice({ ex, status, revealed, young, onRight, onWrong }: BodyProps & {
         {ex.options.map((o, i) => {
           const isAnswer = showAnswer && i === ex.answer;
           const isBad = status.state === "wrong" && picked === i;
+          const marker = MARKERS[i];
           return (
-            <button
-              key={i}
-              type="button"
-              data-testid={`option-${i}`}
-              onClick={() => pick(i)}
-              className={`min-h-20 rounded-2xl px-6 text-2xl font-semibold shadow-sm ring-2 transition active:scale-95 ${
-                isAnswer ? "bg-good text-white ring-good" : isBad ? "bg-oops/15 ring-oops" : "bg-card ring-line"
-              }`}
-            >
-              {words(o, young)}
-            </button>
+            <div key={i} className="flex items-stretch gap-2">
+              <button
+                type="button"
+                data-testid={`option-${i}`}
+                onClick={() => pick(i)}
+                className={`min-h-20 flex-1 rounded-2xl px-6 text-2xl font-semibold shadow-sm ring-2 transition active:scale-95 ${
+                  isAnswer ? "bg-good text-white ring-good" : isBad ? "bg-oops/15 ring-oops" : "bg-card ring-line"
+                }`}
+              >
+                {young && marker && (
+                  <span className="mr-2" aria-hidden>
+                    {marker.e}
+                  </span>
+                )}
+                {words(o, young)}
+              </button>
+              {young && (
+                <button
+                  type="button"
+                  onClick={() => speak(`${marker?.name ?? ""}: ${words(o, young)}`)}
+                  className="grid w-16 shrink-0 place-items-center rounded-2xl bg-card text-2xl ring-1 ring-line"
+                  aria-label={`Read answer ${i + 1}`}
+                >
+                  🔊
+                </button>
+              )}
+            </div>
           );
         })}
       </div>

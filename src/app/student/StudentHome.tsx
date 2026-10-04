@@ -10,17 +10,20 @@ import { currentStep, hasPassed } from "@/lib/club/model";
 import { passCodeFor } from "@/lib/passcode";
 import { isEarlyReader } from "@/lib/young";
 import { updateKid } from "@/lib/club/model";
+import { useStation } from "@/lib/stationStore";
 
 export function StudentHome() {
   const club = useClub();
   const me = useMyProgress();
   const who = useWho();
   const settings = useSettings();
-  const kids = club.kids.filter((k) => !k.archived);
+  const station = useStation();
+  // A station iPad (set up from today's card) asks who's playing in each lesson instead.
+  const kids = station ? [] : club.kids.filter((k) => !k.archived);
   const kid = kids.find((k) => k.id === who.kidId) ?? null;
   const [pickingName, setPickingName] = useState(false);
   const [openStep, setOpenStep] = useState<number | null>(null);
-  const young = isEarlyReader(kid, settings.young);
+  const young = station ? station.easy : isEarlyReader(kid, settings.young);
 
   const passed = (lessonId: string, step: number) => (kid ? hasPassed(club, kid, lessonId, step) : Boolean(me.passed[lessonId]));
   const activeStep = openStep ?? (kid ? currentStep(club, kid) : 1);
@@ -35,12 +38,14 @@ export function StudentHome() {
   return (
     <main className="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-6">
       <header className="flex flex-wrap items-center gap-3">
-        <Link href="/" className="rounded-xl px-3 py-2 text-ink-soft ring-1 ring-line" aria-label="Home">
-          ← Home
-        </Link>
-        <h1 className="flex-1 text-3xl font-bold">{kid ? `Hi, ${kid.name}! 👋` : "Let's play chess!"}</h1>
+        {!station && (
+          <Link href="/" className="grid min-h-[60px] place-items-center rounded-2xl px-4 text-ink-soft ring-1 ring-line" aria-label="Home">
+            ← Home
+          </Link>
+        )}
+        <h1 className="flex-1 text-3xl font-bold">{kid ? `Hi, ${kid.name}! ${kid.animal ?? "👋"}` : station ? station.club : "Let's play chess!"}</h1>
         {kid && (
-          <button type="button" onClick={() => setPickingName(true)} className="rounded-xl bg-card px-4 py-2 ring-1 ring-line">
+          <button type="button" onClick={() => setPickingName(true)} className="min-h-[60px] rounded-2xl bg-card px-5 text-lg ring-1 ring-line">
             Not {kid.name}?
           </button>
         )}
@@ -61,6 +66,9 @@ export function StudentHome() {
                 }}
                 className="min-h-16 rounded-2xl bg-primary-soft px-3 text-xl font-semibold ring-1 ring-line active:scale-95"
               >
+                <span className="mr-2" aria-hidden>
+                  {k.animal}
+                </span>
                 {k.name}
               </button>
             ))}
@@ -87,7 +95,7 @@ export function StudentHome() {
               disabled={s.comingSoon}
               onClick={() => setOpenStep(s.n)}
               aria-pressed={activeStep === s.n}
-              className={`flex items-center gap-2 rounded-full py-1.5 pr-4 pl-1.5 text-lg font-semibold ring-2 transition disabled:opacity-35 ${activeStep === s.n ? "bg-card ring-ink shadow" : "bg-card/60 ring-line"}`}
+              className={`flex min-h-[60px] items-center gap-2 rounded-full py-1.5 pr-4 pl-2 text-lg font-semibold ring-2 transition disabled:opacity-35 ${activeStep === s.n ? "bg-card ring-ink shadow" : "bg-card/60 ring-line"}`}
             >
               <StepDot n={s.n} />
               <span className="hidden sm:inline">{s.kidTitle}</span>
@@ -98,24 +106,28 @@ export function StudentHome() {
 
       <StepLessons step={activeStep} young={young} passed={passed} />
 
-      <section className="flex flex-wrap items-center gap-3 rounded-2xl bg-sunk p-4 text-lg">
-        <label className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            className="h-6 w-6 accent-[var(--primary)]"
-            checked={young}
-            onChange={(e) => {
-              const on = e.target.checked;
+      {!station && (
+        <section className="flex flex-wrap items-center gap-3 rounded-2xl bg-sunk p-4 text-lg">
+          <button
+            type="button"
+            role="switch"
+            aria-checked={young}
+            onClick={() => {
+              const on = !young;
               // Signed in: remember it for this kid. Otherwise: for this device.
               if (kid) clubStore.update((c) => updateKid(c, kid.id, { earlyReader: on }));
               else settingsStore.update((s) => ({ ...s, young: on }));
             }}
+            className={`flex min-h-16 items-center gap-3 rounded-2xl px-5 text-xl font-semibold ring-2 ${young ? "bg-primary text-primary-ink ring-primary" : "bg-card ring-line"}`}
             data-testid="easy-reading"
-          />
-          Easy reading: simpler words, and everything is read out loud
-        </label>
-        {!kid && Object.keys(me.passed).length > 0 && <MyCodes passed={Object.keys(me.passed)} />}
-      </section>
+          >
+            <span aria-hidden>{young ? "🔊 ✓" : "🔊"}</span>
+            Easy reading {young ? "on" : "off"}
+          </button>
+          <span className="text-base text-ink-soft">Simpler words, and questions and answers are read out loud.</span>
+          {!kid && Object.keys(me.passed).length > 0 && <MyCodes passed={Object.keys(me.passed)} />}
+        </section>
+      )}
     </main>
   );
 }

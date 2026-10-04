@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Activity, Square } from "@/content/types";
 import { Board } from "@/components/board/Board";
 import { BigButton } from "@/components/exercise/ExerciseScreen";
@@ -27,6 +27,11 @@ export function MiniGameScreen({ activity, young, readAloud, onExit }: Props) {
   const [thinking, setThinking] = useState(false);
   const [moves, setMoves] = useState(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const rule = activity.rules[1] ?? activity.rules[0];
+  useEffect(() => {
+    if (readAloud && young) speak(`${activity.kidTitle ?? activity.title}. ${rule}`);
+  }, [readAloud, young, activity.kidTitle, activity.title, rule]);
 
   const announce = useCallback(
     (w: Winner) => {
@@ -82,7 +87,7 @@ export function MiniGameScreen({ activity, young, readAloud, onExit }: Props) {
     <section className="flex flex-col items-center gap-4" data-testid="minigame">
       <div className="w-full max-w-3xl text-center">
         <h2 className="text-3xl font-bold">{young ? (activity.kidTitle ?? activity.title) : activity.title}</h2>
-        <p className="mt-1 text-lg text-ink-soft">{activity.rules[1] ?? activity.rules[0]}</p>
+        <p className="mt-1 text-lg text-ink-soft">{rule}</p>
       </div>
       {winner === game.youPlay && <Confetti />}
       <Board fen={fen} orientation={game.youPlay} size="lg" getMoves={getMoves} onMove={onMove} lastMove={last} />

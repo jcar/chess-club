@@ -2,7 +2,7 @@
   "name": "Chess Club Kit",
   "short_name": "Chess Club",
   "description": "Ready-to-run chess club lessons for teachers, with an iPad student mode and printable worksheets.",
-  "start_url": "./",
+  "start_url": "./student/",
   "scope": "./",
   "display": "standalone",
   "background_color": "#fbf7ef",

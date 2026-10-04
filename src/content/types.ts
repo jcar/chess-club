@@ -166,6 +166,12 @@ export interface Lesson {
   /** Extra practice drawn from the Lichess puzzle set for this theme (see content/puzzles.ts). */
   extra?: PuzzleTheme;
   /**
+   * This lesson leans on reading (square names, notation, word problems). A
+   * note for the adult on how to run it with early readers, e.g. out loud,
+   * with the pass ticked by hand. About reading ability, never grade.
+   */
+  readingHeavy?: string;
+  /**
    * Opening to practise at home in OpeningLab (sibling site), e.g. "Italian Game".
    * Shown to the teacher only; student mode has no outside links.
    */
