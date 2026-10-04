@@ -8,7 +8,7 @@ test("worksheet and answer key have the same exercises as the lesson", async ({ 
   await page.goto("./print/lesson/s3-mate/?key=1");
   await expect(page.getByTestId("print-exercise")).toHaveCount(7);
   await expect(page.getByText("Qxf7#").first()).toBeVisible(); // scholar's mate answer
-  await expect(page.getByText("Game card")).toBeVisible();
+  await expect(page.getByText("Game card · put one on each table")).toBeVisible();
 });
 
 test("present mode steps through the script", async ({ page }) => {
@@ -38,4 +38,43 @@ test("worksheet can add a set of 8 extra puzzles with credit", async ({ page }) 
   await expect(page.getByText("Lichess puzzle database").first()).toBeVisible();
   await page.getByLabel("Puzzle set").selectOption("2");
   await expect(page).toHaveURL(/set=2/);
+});
+
+test("plan ahead → session pack prints every section from the saved plan", async ({ page }) => {
+  await page.goto("./teach/roster/");
+  for (const [n, g] of [["Ana", "K"], ["Ben", "1"], ["Cy", "5"]]) {
+    await page.getByTestId("kid-name").fill(n);
+    await page.getByLabel("Grade").selectOption(g);
+    await page.getByRole("button", { name: "Add kid" }).click();
+  }
+  await page.goto("./teach/plan/");
+  await page.getByTestId("plan-date").fill("2030-01-15");
+  await page.getByTestId("plan-ipads").fill("2");
+  await page.getByLabel("Adult name").fill("Jason");
+  await page.getByRole("button", { name: "Add", exact: true }).click();
+  await expect(page.getByTestId("plan-groups")).toContainText("Early readers, together");
+  await expect(page.getByTestId("plan-groups")).toContainText("👤 Jason");
+  // Planning ahead never writes attendance.
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("chessclub:club")!).attendance)).toEqual({});
+
+  await page.goto("./print/session/?date=2030-01-15&tents=1");
+  const pack = page.getByTestId("session-pack");
+  await expect(pack).toContainText("Agenda");
+  await expect(page.getByTestId("station-card")).toHaveCount(1); // the early readers' iPads
+  await expect(page.locator("[data-testid=station-card] [data-qr]")).toHaveAttribute("data-qr", /\/student\/go\/#s=/);
+  await expect(pack).toContainText("Cy"); // Cy (no iPad) gets named worksheets
+  await expect(page.getByTestId("checkoff")).toContainText("Ana");
+  await expect(page.getByTestId("name-tent")).toHaveCount(3);
+});
+
+test("club printables: sticker chart, ladder, and certificates for everyone who finished", async ({ page }) => {
+  await page.goto("./teach/roster/");
+  await page.getByTestId("kid-name").fill("Ana");
+  await page.getByRole("button", { name: "Add kid" }).click();
+  await page.goto("./print/club/?what=chart");
+  await expect(page.getByTestId("sticker-chart")).toContainText("Ana");
+  await page.goto("./print/club/?what=ladder");
+  await expect(page.getByTestId("ladder-chart")).toContainText("Ana");
+  await page.goto("./print/certificate/?step=1");
+  await expect(page.getByText("Nobody has finished Step 1 yet.")).toBeVisible();
 });

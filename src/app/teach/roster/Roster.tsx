@@ -88,7 +88,9 @@ function RosterList({ club }: { club: Club }) {
                       <td className="p-3">
                         <input type="checkbox" className="h-5 w-5 accent-[var(--primary)]" checked={present.has(k.id)} onChange={() => clubStore.update((c) => toggleAttendance(c, date, k.id))} aria-label={`${k.name} is here`} />
                       </td>
-                      <td className="p-3 font-semibold">{k.name}</td>
+                      <td className="p-3 font-semibold">
+                        {k.animal} {k.name}
+                      </td>
                       <td className="p-3">{k.grade ?? "–"}</td>
                       <td className="p-3">
                         <span className="flex items-center gap-2">
@@ -107,6 +109,16 @@ function RosterList({ club }: { club: Club }) {
               </tbody>
             </table>
           </Card>
+        )}
+        {kids.length > 0 && (
+          <p className="flex flex-wrap items-center gap-2 text-sm">
+            🎓 Certificates for everyone who finished:
+            {STEPS.filter((st) => !st.comingSoon).map((st) => (
+              <Link key={st.n} href={`/print/certificate/?step=${st.n}`} className="rounded-full bg-card px-3 py-1 ring-1 ring-line">
+                Step {st.n}
+              </Link>
+            ))}
+          </p>
         )}
         {club.kids.some((k) => k.archived) && (
           <label className="flex items-center gap-2 text-sm text-ink-soft">
@@ -127,7 +139,9 @@ function PassCodeBox({ club }: { club: Club }) {
   return (
     <Card>
       <h2 className="text-lg font-bold">Enter a pass code</h2>
-      <p className="text-sm text-ink-soft">When a kid passes on an iPad that isn&apos;t signed in, they get a code like S1-L2-7F.</p>
+      <p className="text-sm text-ink-soft">
+        A typed code like S1-L2-7F (shown under the iPad&apos;s pass QR, and on answer keys). Faster: scan the QR in <Link href="/teach/wrapup/" className="text-info underline">Wrap-up</Link>.
+      </p>
       <form
         className="mt-2 flex flex-wrap items-end gap-3"
         onSubmit={(e) => {
@@ -139,6 +153,7 @@ function PassCodeBox({ club }: { club: Club }) {
           clubStore.update((c) => recordPass(c, kid.id, lesson.id, "code"));
           setMsg({ ok: true, text: `✓ ${kid.name} passed “${lesson.title}”.` });
           setCode("");
+          setKidId(""); // pick again for the next code, so a pass never lands on the wrong kid
         }}
       >
         <select value={kidId} onChange={(e) => setKidId(e.target.value)} className="rounded-lg px-3 py-2 ring-1 ring-line" aria-label="Kid">

@@ -58,6 +58,11 @@ export function TeacherLesson({ id }: { id: string }) {
         <p className="mt-2 text-ink-soft">
           <b>You need:</b> {lesson.materials.join(" · ")}
         </p>
+        {lesson.readingHeavy && (
+          <p className="mt-2 rounded-lg bg-sunk px-3 py-2" data-testid="reading-heavy">
+            📖 <b>Early readers:</b> {lesson.readingHeavy}
+          </p>
+        )}
       </Card>
 
       <section className="flex flex-col gap-3">

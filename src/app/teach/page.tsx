@@ -6,10 +6,13 @@ import { StepDot } from "@/components/ui/ui";
 export const metadata: Metadata = { title: "Coach" };
 
 const TOOLS = [
-  { href: "/teach/plan/", icon: "🗓", title: "Plan today", text: "Pick who's here. Get groups by level and a timed agenda." },
-  { href: "/teach/roster/", icon: "📋", title: "Roster & progress", text: "Kids, attendance, passes, pass codes, certificates." },
+  { href: "/teach/guide/", icon: "📖", title: "Start here", text: "How to run a session, roles for helpers, what to print, iPad tips." },
+  { href: "/teach/plan/", icon: "🗓", title: "Plan a session", text: "Who's coming, adults, iPads. Get groups, an agenda and a print pack." },
+  { href: "/teach/wrapup/", icon: "✅", title: "Wrap-up", text: "Tick who came and who passed. Scan iPad pass codes and helpers' codes." },
+  { href: "/teach/roster/", icon: "📋", title: "Roster & progress", text: "Kids, placement, progress, certificates." },
+  { href: "/print/club/", icon: "🖨", title: "Club printables", text: "Sticker chart, lesson stamps, name tents, score sheets, ladder." },
   { href: "/teach/play/", icon: "🏆", title: "Club games", text: "Ladder, round robin and Swiss pairings." },
-  { href: "/teach/devices/", icon: "📱", title: "iPads & sharing", text: "Set up club iPads, lock a lesson, move data between devices." },
+  { href: "/teach/devices/", icon: "📱", title: "iPads & sharing", text: "Club iPads, helpers' phones, club files, lock a lesson." },
 ];
 
 export default function TeachHome() {
@@ -22,7 +25,7 @@ export default function TeachHome() {
         <h1 className="text-3xl font-bold">Coach</h1>
       </header>
 
-      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" data-testid="coach-tools">
         {TOOLS.map((t) => (
           <Link key={t.href} href={t.href} className="rounded-2xl bg-card p-4 shadow-sm ring-1 ring-line transition hover:shadow-md">
             <p className="text-3xl" aria-hidden>
